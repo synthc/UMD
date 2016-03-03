@@ -1,0 +1,254 @@
+﻿/*body{
+    background: linear-gradient();
+}
+
+html, body{
+    background-color: gray;
+}
+
+ng-view{
+    background-color: gray;
+}*/
+
+.contentBox {
+    border: solid 2px blue;
+    margin: 25px;
+}
+
+.listBox {
+    border: solid 2px orange;
+    margin: 50px;
+}
+
+p {
+    color: #ffcb00;
+}
+
+* {
+    color: #ffcb00;
+}
+
+#navButtons {
+    /*background-color: #2d2c8f;*/
+    /*border-bottom: solid #523809 3px;*/
+}
+
+.generalFields {
+    margin: 5px;
+    /*background-color: yellow;*/
+}
+
+#typeRadios {
+}
+
+.regFields {
+    margin: 5px;
+}
+
+.editButtons {
+    margin-top: 10px !important;
+    margin-bottom: 20px !important;
+}
+
+#myPanel {
+    margin-left: 15px !important;
+}
+
+#loginButton {
+    margin-bottom: 15px !important;
+    margin-right: 0.001em !important;
+}
+
+#multiButton {
+    margin-top: 15px !important;
+}
+
+#registerButton {
+}
+
+#logo {
+    /*margin: 23px;*/
+    text-decoration: none;
+    color: purple;
+    font-family: Impact;
+    font-size: 45px;
+}
+
+#mainContainer {
+}
+
+.navButton {
+    color: red;
+}
+
+#entryTitle {
+    /*text-align: center;*/
+}
+
+.centerBlock {
+    display: table;
+    margin: 0 auto;
+}
+
+#entryMeta {
+    border: solid 1px black;
+}
+
+#entryMain {
+    border: solid 1px blue;
+}
+
+._label {
+    font-weight: bold;
+    white-space: nowrap;
+    /*color: #ad264b !important;*/
+}
+
+.noWrap {
+    white-space: nowrap;
+}
+
+.capitalize {
+    text-transform: capitalize;
+}
+
+.bigLabel {
+    font-size: large;
+    /*color: #ad264b !important;*/
+    /*color: #3fc13d !important;*/
+}
+
+.data {
+    color: #3fc13d !important;
+}
+
+hr {
+    margin: 0.3em auto !important;
+    border-color: #dbaf5e !important;
+}
+
+.panel {
+    margin: 2em auto !important;
+    border: solid 1px black !important;
+}
+
+.panel-body {
+    background: #1b0b0b !important;
+}
+
+.navItem {
+    margin: 0.5em auto !important;
+}
+
+#navSpacerDiv {
+    margin-right: 135px !important;
+}
+
+#homeSearchField {
+    /*margin: 0.5em auto !important;*/
+    margin-left: 13px !important;
+}
+
+#homeSearchButton {
+    margin-right: 15px !important;
+}
+
+/*label{
+    padding: 0;
+    margin: 0;
+}*/
+
+body {
+    background: url(http://www.publicdomainpictures.net/pictures/40000/velka/pandora-storm.jpg) no-repeat center center fixed;
+    background-size: cover;
+}
+
+#ddlsearch {
+    background-color: aliceblue;
+}
+
+/*.searchOption{
+    background-color: gold !important;
+}*/
+
+#searchByButton {
+    width: 150px !important;
+}
+
+#searchForButton {
+    width: 180px !important;
+}
+
+.divider {
+    width: 5px !important;
+    height: auto !important;
+    display: inline-block !important;
+}
+
+.thumbnailImg {
+    display: block;
+    margin: 0 auto;
+    margin-bottom: 15px;
+    height: auto;
+    width: auto;
+    max-height: 325px;
+    max-width: 325px;
+}
+
+#loginDiv {
+    background-color: aliceblue;
+}
+
+#masterlist {
+}
+
+#masterlistEditModal {
+    background-color: aliceblue;
+}
+
+.ratingSelect {
+    background: #3290ba !important;
+    margin-top: 15px !important;
+}
+
+.userAttrInputs {
+    color: #000000 !important;
+    margin: 1px !important;
+}
+
+.lowercase {
+    text-transform: lowercase;
+}
+
+.center {
+    text-align: center !important;
+}
+
+.vanillaButton {
+    background-color: #2684cb !important;
+    color: black !important;
+}
+
+.dbContributorButton {
+    margin-left: 5px !important;
+}
+
+/*input[type="text"], textarea {
+  background-color : #4a2323;
+}*/
+
+input[type="text"], textarea {
+    color: #000000;
+}
+
+textarea {
+    color: #000000 !important;
+}
+
+#dbEditModal{
+    background-color: #4d1b1b !important;
+}
+
+#listEmpty{
+    color: #ffcb00 !important;
+}

@@ -1,0 +1,173 @@
+﻿<html xmlns="http://www.w3.org/1999/xhtml" ng-app="MyApp">
+<head>
+    <title>UMD2</title>
+    <base href="/" />
+    <link href="~/ngApp/Style.css" rel="stylesheet" />
+    <link href="~/Bootswatch/bootstrap.min.css" rel="stylesheet" />
+    <script src="~/Scripts/jquery-2.1.4.min.js"></script>
+    <script src="~/Scripts/bootstrap.min.js"></script>
+</head>
+@*<body style="background-color: #8ba5a4">*@
+@*<body style="background-color: #e1e0e0">*@
+<body>
+
+
+    <!--NavBar:-->
+    <div ng-controller="NavController as nav">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-4">
+                    <a id="logo" href="/">UMD</a>
+                </div>
+                <div class="col-md-4">
+                    @*<h1 style="margin-bottom: 30px">Universal Media Database</h1>*@
+                </div>
+
+                <div class="col-md-3">
+
+                </div>
+
+                <div id="multiButton" ng-show="nav.loggedIn == true" class="col-md-1">
+                    <div class="dropdown">
+                        <button class="btn btn-success btn-block dropdown-toggle" type="button" data-toggle="dropdown">{{nav.userName}} <span class="caret"></span></button>
+                        <ul class="dropdown-menu">
+                            <li><a href="/profile">My Profile</a></li>
+                            <li><a href="/mylist">My Master List</a></li>
+                            @*<li><a href="#">[repeat other lists here]</a></li>*@
+                            <li><a href="#" ng-click="nav.logout()">Logout</a></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div id="loginButton" ng-show="nav.loggedIn == false" class="col-md-1">
+                    <div class="dropdown">
+                        <a style="margin-top: 23px" href="#" ng-click="nav.openLoginModal()" class="btn btn-success btn-block">Log In</a>
+                    </div>
+                </div>
+
+                @*<div>
+                        <div id="loginButton" class="col-md-1">
+                            <a style="margin-top: 23px" href="#" ng-click="nav.openLoginModal()" class="btn btn-success btn-block">Login</a>
+                        </div>
+                        <div id="registerButton" class="col-md-1">
+                            <a style="margin-top: 23px" href="/register" class="btn btn-primary btn-block">Sign Up</a>
+                        </div>
+                        <div class="col-md-1">
+                            <a style="margin-top: 23px" href="#" ng-click="nav.logout()" class="btn btn-warning btn-block">Logout</a>
+                        </div>
+                        <div class="col-md-1">
+                            <a style="margin-top: 23px" href="#" ng-click="nav.isLoggedIn()" class="btn btn-primary btn-block">Debug LI</a>
+                        </div>
+                    </div>*@
+
+            </div>
+
+            <!--Nav Buttons:-->
+            <div id="navButtons">
+                <div class="row">
+
+                    <!--My Panel:-->
+                    <div ng-show="nav.loggedIn" id="myPanel" class="col-lg-1 navItem">
+                        <div>
+                            <a href="/mylist" class="btn btn-primary btn-block">My Lists</a>
+                        </div>
+                    </div>
+
+                    <!--Browse:-->
+                    <div class="col-lg-1 navItem">
+                        <div class="dropdown">
+                            <button class="btn btn-primary btn-block dropdown-toggle" type="button" data-toggle="dropdown">Browse <span class="caret"></span></button>
+                            <ul class="dropdown-menu">
+                                <li><a href="/search">All</a></li>
+                                <li><hr /></li>
+                                <li><a href="/movies">Movies</a></li>
+                                <li><a href="/series">TV Series</a></li>
+                                <li><a href="/games">Games</a></li>
+                                <li><a href="/books">Books</a></li>
+                                <li><a href="/music">Music</a></li>
+                                <li><a href="/art">Art</a></li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!--About:-->
+                    <div class="col-lg-1 navItem">
+                        <a href="/about" class="btn btn-primary btn-block">About</a>
+                    </div>
+
+                    <!--Unauthenticated Spacer:-->
+                    <div ng-show="!nav.loggedIn" class="col-lg-1 navItem"></div>
+
+                    <!--Spacer:-->
+                    <div id="navSpacerDiv" class="col-lg-2"></div>
+
+                    <!--Search For:-->
+                    <div id="searchForButton" class="col-lg-2 navItem">
+                        <button class="btn btn btn-success btn-block dropdown-toggle" type="button" data-toggle="dropdown">Search For: {{nav.query.searchFor}}<span class="caret"></span></button>
+                        <ul class="dropdown-menu">
+                            <li><a href="#" ng-click="nav.setParams(0, 'All')">All</a></li>
+                            <li><hr /></li>
+                            <li><a href="#" ng-click="nav.setParams(0, 'Movie')">Movies</a></li>
+                            <li><a href="#" ng-click="nav.setParams(0, 'Series')">TV Series</a></li>
+                            <li><a href="#" ng-click="nav.setParams(0, 'Game')">Games</a></li>
+                            <li><a href="#" ng-click="nav.setParams(0, 'Book')">Books</a></li>
+                            <li><a href="#" ng-click="nav.setParams(0, 'Music')">Music</a></li>
+                            <li><a href="#" ng-click="nav.setParams(0, 'Art')">Art</a></li>
+                        </ul>
+                    </div>
+
+                    <!--Search By:-->
+                    <div class="col-lg-1 navItem">
+                        <button id="searchByButton" class="btn btn btn-warning btn-block dropdown-toggle" type="button" data-toggle="dropdown">Search By: {{nav.query.searchBy}}<span class="caret"></span></button>
+                        <ul class="dropdown-menu">
+                            <li><a href="#" ng-click="nav.setParams(1, 'Any')">Any</a></li>
+                            <li><hr /></li>
+                            <li><a href="#" ng-click="nav.setParams(1, 'Title')">Title</a></li>
+                            <li><a href="#" ng-click="nav.setParams(1, 'Person')">Person</a></li>
+                            <li><a href="#" ng-click="nav.setParams(1, 'Genre')">Genre</a></li>
+                            @*<li><a href="#" ng-click="nav.setParams(1, 'Tag')">Tag</a></li>*@
+                        </ul>
+                    </div>
+
+                    <!--Search Bar:-->
+                    <div id="homeSearchField" class="col-lg-2 form-group navItem">
+                        <input class="form-control" type="text" size="38" value="" ng-model="nav.query.query" />
+                    </div>
+
+                    <!--Search Button:-->
+                    <div id="homeSearchButton" class="col-lg-1 form-group navItem">
+                        <input class="btn btn-block btn-primary" type="button" value="Search" ng-click="nav.search()" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div><!--End Navigation-->
+
+    <br />
+    <br />
+    <br />
+
+    <ng-view></ng-view>
+
+    <script src="~/Scripts/angular.min.js"></script>
+    <script src="~/Scripts/angular-route.min.js"></script>
+    <script src="~/Scripts/angular-resource.min.js"></script>
+    <script src="~/Scripts/angular-ui/ui-bootstrap-tpls.min.js"></script>
+
+    <script src="~/master.js"></script>
+
+    @*<script src="~/ngApp/app.js"></script>
+        <script src="~/ngApp/controllers/controllers.js"></script>
+        <script src="~/ngApp/controllers/NavController.js"></script>
+        <script src="~/ngApp/controllers/homeController.js"></script>
+        <script src="~/ngApp/controllers/MainListController.js"></script>
+        <script src="~/ngApp/controllers/AddToDbController.js"></script>
+        <script src="~/ngApp/controllers/dbListController.js"></script>
+        <script src="~/ngApp/services/MediaService.js"></script>
+        <script src="~/ngApp/services/services.js"></script>
+
+        <script src="~/ngApp/services/accountService.js"></script>
+        <script src="~/ngApp/controllers/accountController.js"></script>*@
+
+</body>
+</html>

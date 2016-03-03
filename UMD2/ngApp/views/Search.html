@@ -1,0 +1,29 @@
+﻿<div class="container-fluid">
+    <h1 class="text-center">Search Results</h1>
+
+    <h4 ng-show="vm.isLoggedIn" style="text-align: right">Don't see what you're looking for? <a href="/addtodb">Add it here.</a></h4>
+
+    <div>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Title</th>
+                    <!--<th></th>-->
+                    <th>Type</th>
+                    <th>Genre</th>
+                    <th>Description</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="media in vm.MediaService.searchTransport">
+                    <td><a href="entry/{{media.id}}">{{media.title}}</a></td>
+                    <!--<td ng-show="vm.hasInList == false"><input class="btn btn-sm btn-primary" type="button" value="Add to list" ng-click="vm.addToList(media.id)" /></td>
+                    <td ng-show="vm.hasInList == true">{{vm.addStatus}}<br /><a href="/mylist">View your masterlist</a></td>-->
+                    <td>{{media.type}}</td>
+                    <td>{{media.genre}}</td>
+                    <td>{{media.description}}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

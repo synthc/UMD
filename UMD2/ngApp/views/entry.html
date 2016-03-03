@@ -1,0 +1,123 @@
+﻿<div class="container">
+    <div class="row">
+        <!--Title-->
+        <div class="col-md-12 text-center">
+            <h1>{{vm.media.title}}</h1>
+        </div>
+
+        <div ng-show="vm.media.type == 'movie'">
+            <!--Metadata-->
+            <div class="col-md-4">
+                <div class="panel panel-success">
+                    <div class="panel-heading text-center">
+                        <!--<label class="bigLabel" style="color: #ffcb00 !important">Metadata</label>-->
+                        <!--<input type="button" class="btn btn-primary" value="Edit entry" ng-click="vm.openEditModal(vm.media.id)" />-->
+                          
+                    </div>
+                    <div class="panel-body">
+                        <img class="thumbnailImg" src="{{vm.media.thumbnailUrl}}" alt="" />
+                        <div ng-show="vm.isLoggedIn == true && vm.hasInList == false" class="text-center"><input class="btn btn-sm btn-warning" type="button" value="Add to list" ng-click="vm.addToList()" /></div>
+                        <div ng-show="vm.showListLink" class="text-center">{{vm.addStatus}}<br /><a href="/mylist">View masterlist</a></div>
+                        <div ng-show="vm.hasInList == true" class="text-center"><input class="btn btn-sm btn-danger" type="button" value="Remove from list" ng-click="vm.removeFromList()" /></div>
+                        <p class="capitalize"><span class="_label">Type:  </span>{{vm.media.type}}</p>
+                        <p class="capitalize"><span class="_label">Release Date:  </span>{{vm.releaseDate}}</p>
+                        <p class="capitalize" ng-show="vm.media.collections[0]"><span class="_label">Part of:  </span>{{vm.media.collections}}</p>
+                        <p class="capitalize"><span class="_label">Genre:  </span>{{vm.media.genre}}</p>
+                        <p class="capitalize"><span class="_label">Country of Origin:  </span>{{vm.media.countryOfOrigin}}</p>
+                        <p class="capitalize"><span class="_label">Average Rating:  </span>{{vm.media.averageRating}}</p>
+                        <p><span class="_label">Duration:  </span>{{vm.media.duration}} min.</p>
+                        <!--<p class="capitalize"><span class="_label">Studio:  </span>{{vm.media.studios}}</p>-->
+                        <p class="capitalize"><span class="_label">Language:  </span>{{vm.media.language}}</p>
+                        <p class="capitalize">
+                            <span class="_label">Animation:  </span>
+                            <span ng-show="vm.media.isAnimation">Yes</span>
+                            <span ng-show="!vm.media.isAnimation">No</span>
+                        </p>
+                        <a href="#" ng-show="vm.isLoggedIn == true" ng-click="vm.openEditModal(vm.media.id)">Edit this entry</a>
+                    </div>
+                </div>
+            </div>
+
+            <!--Main Column-->
+            <div class="col-md-8">
+                <div class="panel panel-primary">
+                    <div class="panel-heading">
+                          
+                    </div>
+                    <div class="panel-body">
+                        <!--Description-->
+                        <div>
+                            <label class="bigLabel">Description</label>
+                            <hr />
+                            <p>{{vm.media.description}}</p>
+                        </div>
+
+                        <!--Related-->
+                        <div>
+                            <label class="bigLabel" ng-show="vm.media.collections[0]">Related</label>
+                            <hr ng-show="vm.media.collections[0]" />
+                            <ul>
+                                <li ng-repeat="media in vm.media.collections[0].contents"><a href="/entry/{{media.id}}">{{media.title}}</a></li>
+                            </ul>
+                        </div>
+
+                        <!--Cast-->
+                        <div>
+                            <label class="bigLabel">Cast</label>
+                            <div>
+                                <table class="table">
+                                    <tbody>
+                                        <tr ng-repeat="cast in vm.cast">
+                                            <td>{{cast.givenName}} {{cast.surname}}  &nbsp;  &nbsp;  &nbsp;  &nbsp; &nbsp;</td>
+                                            <td><a href="#">{{vm.roles[$index]}}</a></td> <!--ng-click that opens a modal that allows the user to input a role \\ have to write to db-->
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <!--Staff-->
+                        <div>
+                            <label class="bigLabel">Staff</label>
+                            <div>
+                                <table class="table">
+                                    <tbody>
+                                        <tr ng-repeat="director in vm.directors">
+                                            <td>{{director.givenName}} {{director.surname}}</td>
+                                            <td>{{director.roles}}</td>
+                                        </tr>
+                                        <tr ng-repeat="writer in vm.writers">
+                                            <td>{{writer.givenName}} {{writer.surname}}</td>
+                                            <td>{{writer.roles}}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <!--Reviews-->
+                        <div>
+                            <label class="bigLabel">Reviews</label>
+                            <div>
+                                <table class="table">
+                                    <!--<thead>
+                                        <tr>
+                                            <th></th>
+                                        </tr>
+                                    </thead>-->
+                                    <tbody>
+                                        <tr>
+                                            <td><input type="button" class="btn btn-success btn-sm" value="Write a review" /></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+

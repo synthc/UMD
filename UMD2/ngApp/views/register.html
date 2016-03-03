@@ -1,0 +1,69 @@
+﻿<div class="text-center">
+    <h1>Create Account</h1>
+</div>
+
+<div class="container; row text">
+    <div class="col-md-4"></div>
+    <div class="col-md-6">
+        <!--<fieldset>
+            <legend>Register with a Social Provider</legend>
+            <ul>
+                <li ng-repeat="externalLogin in account.externalLogins">
+                    <a target="_self" href="{{externalLogin.url}}">{{externalLogin.name}}</a>
+                </li>
+            </ul>
+
+        </fieldset>-->
+
+        <fieldset>
+            <!--<legend>Local Registration</legend>-->
+            <ul>
+                <li ng-repeat="message in controller.validationMessages">
+                    {{message}}
+                </li>
+            </ul>
+
+            <div class="form-group">
+                <form ng-submit="controller.register()">
+                    <div class="form-control; row">
+                        <div class="col-md-3">
+                            <label class="regFields">Username:</label>
+                        </div>
+                        <div class="col-md-9">
+                            <input class="regFields" size="30" type="text" ng-model="controller.registerUser.userName" />
+                        </div>
+                    </div>
+                    <div class="form-control; row">
+                        <div class="col-md-3">
+                            <label class="regFields">Email:</label>
+                        </div>
+                        <div class="col-md-9">
+                            <input class="regFields" size="30" type="text" ng-model="controller.registerUser.email" />
+                        </div>
+                    </div>
+                    <div class="form-control; row">
+                        <div class="col-md-3">
+                            <label class="regFields">Password:</label>
+                        </div>
+                        <div class="col-md-9">
+                            <input class="regFields" size="30" ng-model="controller.registerUser.password" />
+                        </div>
+                    </div>
+                    <div class="form-control; row">
+                        <div class="col-md-3">
+                            <label class="regFields" size="30">Confirm Password:</label>
+                        </div>
+                        <div class="col-md-9">
+                            <input class="regFields" size="30" ng-model="controller.registerUser.confirmPassword" />
+                        </div>
+
+                    </div>
+                    <input type="submit" class="btn btn-success" value="Submit" />
+                </form>
+            </div>
+
+        </fieldset>
+    </div>
+
+</div>
+

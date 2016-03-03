@@ -1,0 +1,52 @@
+﻿<div id="loginDiv" class="container; row">
+    <div class="col-md-3"></div>
+    <div class="col-md-6">
+        <!--<fieldset>
+            <legend>Login with a Social Provider</legend>
+
+            <ul>
+                <li ng-repeat="externalLogin in account.externalLogins">
+                    <a target="_self" href="{{externalLogin.url}}">{{externalLogin.name}}</a>
+                </li>
+            </ul>
+
+        </fieldset>-->
+
+        <fieldset>
+            <legend>Log In</legend>
+            <ul>
+                <li ng-repeat="error in controller.validationMessages">
+                    {{error}}
+                </li>
+            </ul>
+
+            <div class="form-group">
+                <form ng-submit="controller.login(); controller.closeModal()">
+                    <div class="form-control; row">
+                        <div class="col-md-3">
+                            <label>Username:</label>
+                        </div>
+                        <div class="col-md-9">
+                            <input ng-model="controller.loginUser.userName" />
+                        </div>
+                    </div>
+                    <div class="form-control; row">
+                        <div class="col-md-3">
+                            <label>Password:</label>
+                        </div>
+                        <div class="col-md-7">
+                            <input type="password" ng-model="controller.loginUser.password" />
+                        </div>
+                    </div>
+                    <input class="btn btn-primary" type="submit" value="Login" />
+                    <br />
+                    <br />
+                    <a href="/register" ng-click="controller.closeModal()">Create a new account</a>
+                </form>
+            </div>
+            
+        </fieldset>
+    </div>
+</div>
+
+

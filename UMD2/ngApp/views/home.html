@@ -1,0 +1,113 @@
+﻿<div id="mainContainer" class="container-fluid">
+    <div class="row">
+        <div id="homeMainDiv" class="col-md-4">
+
+            <!--Admin Panel:-->
+            <div ng-show="vm.isAdmin" class="panel panel-success">
+                <div class="panel-heading">Admin Panel</div>
+                <div class="panel-body">
+                    <a href="/addtodb">Create New Database Item</a>
+                    <br /><a href="/debug/dblist">Manage Database</a>
+                    <br /><a href="#" ng-click="vm.debugSeed()">Seed Data</a>
+                </div>
+            </div>
+
+            <div class="panel panel-success">
+                <div class="panel-heading">General Announcements</div>
+                <div class="panel-body">
+                    [content here]
+                </div>
+            </div>
+
+            <div class="panel panel-success">
+                <div class="panel-heading">Top User Lists</div>
+                <div class="panel-body">
+                    [content here]
+                </div>
+            </div>
+
+            <div class="panel panel-success">
+                <div class="panel-heading">Top Threads</div>
+                <div class="panel-body">
+                    [content here]
+                </div>
+            </div>
+
+        </div>
+
+        <!--Top Movies:-->
+        <div id="homeSideDiv" class="col-md-8">
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="panel panel-primary">
+                        <div class="panel-heading">Top Movies</div>
+                        <div class="panel-body">
+                            <ul class="list-unstyled">
+                                <li ng-repeat="media in vm.medias | orderBy: '-rating'" ng-show="media.type == 'movie' && media.isActive == true"><a class="Hlinks" href="/entry/{{media.id}}">{{media.title}}</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+
+                <!--Top Series:-->
+                <div class="col-md-4">
+                    <div class="panel panel-primary">
+                        <div class="panel-heading">Top TV Series</div>
+                        <div class="panel-body">
+                            [list here]
+                        </div>
+                    </div>
+                </div>
+
+
+                <!--Top Games:-->
+                <div class="col-md-4">
+                    <div class="panel panel-primary">
+                        <div class="panel-heading">Top Games</div>
+                        <div class="panel-body">
+                            <ul class="list-unstyled">
+                                <li ng-repeat="media in vm.medias | orderBy: '-rating'" ng-show="media.type == 'game' && media.isActive == true"><a class="Hlinks" href="/entry/{{media.id}}">{{media.title}}</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <!--Top Books:-->
+                <div class="col-md-4">
+                    <div class="panel panel-primary">
+                        <div class="panel-heading">Top Books</div>
+                        <div class="panel-body">
+                            [list here]
+                        </div>
+                    </div>
+                </div>
+                
+                <!--Top Music:-->
+                <div class="col-md-4">
+                    <div class="panel panel-primary">
+                        <div class="panel-heading">Top Music</div>
+                        <div class="panel-body">
+                            [list here]
+                        </div>
+                    </div>
+                </div>
+                
+                <!--Top Art:-->
+                <div class="col-md-4">
+                    <div class="panel panel-primary">
+                        <div class="panel-heading">Top Art</div>
+                        <div class="panel-body">
+                            [list here]
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
