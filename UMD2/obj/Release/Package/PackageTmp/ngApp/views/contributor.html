@@ -1,0 +1,58 @@
+﻿<div class="container">
+    <div class="text-center" ng-show="vm.notFound == true || vm.showInactiveMessage == true">
+        <h1 class="reviewText">Entry not found. It may have been deleted.</h1>
+    </div>
+
+    <div ng-show="vm.notFound == false && vm.showInactiveMessage == false" class="row">
+        <div class="col-md-12 text-center"><h1 class="sectionHeader">{{vm.contributor.givenName}} {{vm.contributor.surname}} <span class="reviewText" ng-show="vm.showInactiveIndicator == true"> (Deleted)</span></h1></div>
+
+        <!--Metadata-->
+        <div class="col-md-4">
+            <div class="panel panel-success">
+                <div class="panel-heading text-center">
+                    <!--<label class="bigLabel" style="color: #ffcb00 !important">Metadata</label>-->
+                    <!--<input type="button" class="btn btn-primary" value="Edit entry" ng-click="vm.openEditModal(vm.media.id)" />-->
+
+                </div>
+                <div class="panel-body">
+                    <img class="thumbnailImg" src="{{vm.contributor.thumbnailUrl}}" alt="" />
+                    <p class="capitalize"><span class="_label">Roles:  </span>{{vm.contributor.roles}}</p>
+                    <p class="capitalize"><span class="_label">Date of Birth:  </span>{{vm.dob}}</p>
+                    <p class="capitalize"><span class="_label">Nationality:  </span>{{vm.contributor.nationality}}</p>
+                    <p class="capitalize" ng-if="vm.contributor.websiteUrl != null"><span class="_label">Website:  </span>{{vm.contributor.websiteUrl}}</p>
+                    <p class="capitalize" ng-if="vm.contributor.currentAffiliations[0]"><span class="_label">Current Affiliation:  </span>{{vm.contributor.currentAffiliation}}</p>
+                    <p class="capitalize" ng-if="vm.contributor.pastAffiliations[0]"><span class="_label">Past Affiliation:  </span>{{vm.contributor.pastAffiliation}}</p>
+                    <p ng-if="vm.contributor.description != null"><span class="_label">Short Bio:  </span>n:{{vm.contributor.description}}</p>
+                    <a href="#" ng-show="vm.isLoggedIn == true" ng-click="vm.edit()">Edit this entry</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-8">
+            <div class="panel panel-success">
+                <div class="panel-heading text-center"></div>
+                <div class="panel-body">
+                    <div class="text-center">
+                        <h1>Contributions</h1>
+                    </div>
+                    <div>
+                        <table class="table">
+                            <tbody>
+                                <tr ng-repeat="contribution in vm.contributor.contributions">
+                                    <td>{{$index + 1}}</td>
+                                    <td><a href="/entry/{{contribution.id}}">{{contribution.title}}</a>  &nbsp;  &nbsp;  &nbsp;  &nbsp; &nbsp;</td>
+                                    <td><a href="#">{{vm.roles[$index]}}</a></td> <!--ng-click that opens a modal that allows the user to input a role \\ have to write to db-->
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!--Contributions-->
+        <div class="col-md-8">
+
+        </div>
+    </div>
+</div>

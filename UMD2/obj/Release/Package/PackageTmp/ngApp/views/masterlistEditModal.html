@@ -1,0 +1,118 @@
+﻿<div id="masterlistEditModal" class="container-fluid">
+    <div class="text-center"><h1>Editing "{{vm.media.title}}"</h1></div>
+
+    <div class="form-group">
+        <div class="row text">
+            <div class="col-md-3">
+                <h3>Select Rating:</h3>
+            </div>
+            <div class="col-md-2">
+                <select class="form-control ratingSelect" ng-model="vm.rating">
+                    <option value="">-</option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                    <option value="6">6</option>
+                    <option value="7">7</option>
+                    <option value="8">8</option>
+                    <option value="9">9</option>
+                    <option value="10">10</option>
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="row">
+            <div class="col-md-3">
+                <h3>Select Status:</h3>
+            </div>
+
+            <div class="col-md-2">
+                <select class="form-control ratingSelect" ng-model="vm.status">
+                    <option value="">-</option>
+                    <option value="future">Plan to {{vm.statusVerb}}</option>
+                    <option value="present">{{vm.statusVerb}}ing</option>
+                    <option value="past">Completed</option>
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="row">
+            <div class="col-md-3">
+                <h3>Start Date:</h3>
+                <h4>Year:</h4>
+                <h4>Month:</h4>
+                <h4>Day:</h4>
+            </div>
+            <div class="col-md-3">
+                <br /><br /><br />
+                <input class="userAttrInputs" type="number" value="2015" min="1900" max="2300" ng-model="vm.startDateYear" /><br />
+                <input class="userAttrInputs" type="number" value="1" min="1" max="12" ng-model="vm.startDateMonth" /><br />
+                <input class="userAttrInputs" type="number" value="1" min="1" max="31" ng-model="vm.startDateDay" />
+            </div>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="row">
+            <div class="col-md-3">
+                <h3>End Date:</h3>
+                <h4>Year:</h4>
+                <h4>Month:</h4>
+                <h4>Day:</h4>
+            </div>
+            <div class="col-md-3">
+                <br /><br /><br />
+                <input class="userAttrInputs" type="number" value="2015" min="1900" max="2300" ng-model="vm.endDateYear" /><br />
+                <input class="userAttrInputs" type="number" value="1" min="1" max="12" ng-model="vm.endDateMonth" /><br />
+                <input class="userAttrInputs" type="number" value="1" min="1" max="31" ng-model="vm.endDateDay" />
+            </div>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="row">
+            <div class="col-md-4">
+                <h3 ng-show="vm.statusVerb == 'Watch'">Times Re-watched:</h3>
+                <h3 ng-show="vm.statusVerb == 'Play'">Times Re-played:</h3>
+                <h3 ng-show="vm.statusVerb == 'Read'">Times Re-read:</h3>
+                <h3 ng-show="vm.statusVerb == 'Watch'">Rewatch Value:</h3>
+                <h3 ng-show="vm.statusVerb == 'Play'">Replay Value:</h3>
+                <h3 ng-show="vm.statusVerb == 'Read'">Reread Value:</h3>
+            </div>
+            <div class="col-md-3">
+                <br />
+                <input class="userAttrInputs" type="number" value="0" min="0" max="999" ng-model="vm.reCount" /><br />
+                <select class="form-control ratingSelect" ng-model="vm.reValue">
+                    <option value="">-</option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                    <option value="6">6</option>
+                    <option value="7">7</option>
+                    <option value="8">8</option>
+                    <option value="9">9</option>
+                    <option value="10">10</option>
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <h3>Enter Tags:</h3>
+        <br />
+        <textarea cols="30" rows="4" ng-model="vm.tags"></textarea>
+    </div>
+    
+    <input type="button" class="btn btn-success" value="Submit" ng-click="vm.submit()" />
+    <input type="button" class="btn btn-danger" value="Cancel" ng-click="vm.close()" />
+    <br />
+    <br />
+</div>

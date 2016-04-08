@@ -29,7 +29,6 @@
 
     angular.module('MyApp').controller('AccountController', AccountController);
 
-
     export class LoginController {
         public loginUser;
         public validationMessages;
@@ -52,14 +51,13 @@
         }
     }
 
-
     export class RegisterController {
         public registerUser;
         public validationMessages;
 
         public register() {
             this.accountService.register(this.registerUser).then(() => {
-                this.$location.path('/login');
+                this.$location.path('/registersuccess');
             }).catch((results) => {
                 this.validationMessages = results;
             });
@@ -67,8 +65,6 @@
 
         constructor(private accountService: MyApp.Services.AccountService, private $location: ng.ILocationService) { }
     }
-
-
 
     export class ExternalLoginController {
 
@@ -86,7 +82,6 @@
             });
         }
     }
-
 
     export class ExternalRegisterController {
         private externalAccessToken;

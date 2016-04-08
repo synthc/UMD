@@ -1,0 +1,198 @@
+﻿<div id="contributorEditModal" class="container">
+    <h2 style="text-transform: capitalize" class="text-center">Editing: {{vm.contributor.givenName}} {{vm.contributor.surname}}</h2>
+    <div class="row">
+        <div class="col-md-10 col-md-offset-1">
+            <form ng-submit="vm.saveChanges()">
+                <div class="form-group">
+                    <div class="form-control; row">
+                        <div class="col-md-4">
+                            <label class="generalLabel">Role(s)*</label>
+                        </div>
+                        <div class="col-md-8">
+                            <input class="generalFields" type="text" size="45" placeholder="Actor, director, writer, composer, etc..." ng-model="vm.contributor.roles" />
+                        </div>
+                    </div>
+
+                    <div class="form-control; row">
+                        <div class="col-md-4">
+                            <label class="generalLabel">First Name*</label>
+                        </div>
+                        <div class="col-md-8">
+                            <input class="generalFields" type="text" size="45" ng-model="vm.contributor.givenName" />
+                        </div>
+                    </div>
+
+                    <div class="form-control; row">
+                        <div class="col-md-4">
+                            <label class="generalLabel">Last Name*</label>
+                        </div>
+                        <div class="col-md-8">
+                            <input class="generalFields" type="text" size="45" ng-model="vm.contributor.surname" />
+                        </div>
+                    </div>
+
+                    <div class="form-control; row">
+                        <div class="col-md-4">
+                            <label class="generalLabel">Date of Birth*</label>
+                        </div>
+                        <div class="col-md-8">
+                            <input class="generalFields dateFields" type="number" min="1753" max="2100" placeholder="Year (1753+)" ng-model="vm.year" />
+                            <input class="generalFields dateFields" type="number" min="1" max="12" placeholder="Month (1-12)" ng-model="vm.month" />
+                            <input class="generalFields dateFields" type="number" min="1" max="31" placeholder="Day (1-31)" ng-model="vm.day" />
+                        </div>
+                    </div>
+
+                    <div class="form-control; row">
+                        <div class="col-md-4">
+                            <label class="generalLabel">Nationality*</label>
+                        </div>
+                        <div class="col-md-8">
+                            <input class="generalFields" type="text" size="45" ng-model="vm.contributor.nationality" />
+                        </div>
+                    </div>
+
+                    <div class="form-control; row">
+                        <div class="col-md-4">
+                            <label class="generalLabel">Website</label>
+                        </div>
+                        <div class="col-md-8">
+                            <input class="generalFields" type="text" placeholder="Enter the address of the person's website"
+                                   size="45" ng-model="vm.contributor.websiteUrl" />
+                        </div>
+                    </div>
+
+                    <div class="form-control; row">
+                        <div class="col-md-4">
+                            <label class="generalLabel">Profile Image URL</label>
+                        </div>
+                        <div class="col-md-8">
+                            <input class="generalFields" type="text" placeholder="Enter the address of a photo of the person"
+                                   size="45" ng-model="vm.contributor.thumbnailUrl" />
+                        </div>
+                    </div>
+
+                    <div class="form-control; row">
+                        <div class="col-md-4">
+                            <label class="generalLabel">Short Bio</label>
+                        </div>
+                        <div class="col-md-8">
+                            <textarea class="generalFields" cols="47" rows="4" ng-model="vm.contributor.description"></textarea>
+                        </div>
+                    </div>
+
+                    <!--Contributions:-->
+                    <div class="mini-results">
+                        <h3>Contributions:</h3>
+                        <table id="editModalCList" class="table">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Title</th>
+                                    <th>Type</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="contribution in vm.contributor.contributions">
+                                    <td>{{$index + 1}}</td>
+                                    <td class="col-md-4">{{contribution.title}}</td>
+                                    <td>{{contribution.type}}</td>
+                                    <td><input type="button" class="btn btn-danger btn-sm" value="Remove" ng-click="vm.removeContribution($index)" /></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <input type="checkbox" value="true" ng-model="vm.addContributions" /><label>Add Contributions</label>
+
+                    <!--Contribution Search:-->
+                    <div ng-show="vm.addContributions">
+                        <div class="row">
+                            <!--Search For:-->
+                            <div id="addSearchFor" class="col-md-4">
+                                <button class="btn btn-success btn-sm btn-block dropdown-toggle cEditSearchForBy" type="button" data-toggle="dropdown">Search For: {{vm.contributionQuery.searchFor}}<span class="caret"></span></button>
+                                <ul class="dropdown-menu">
+                                    <li><a href="#" ng-click="vm.setSearchParams(0, 'All')">All Media</a></li>
+                                    <li><hr /></li>
+                                    <li><a href="#" ng-click="vm.setSearchParams(0, 'Movies')">Movies</a></li>
+                                    <li><a href="#" ng-click="vm.setSearchParams(0, 'Series')">TV Series</a></li>
+                                    <li><a href="#" ng-click="vm.setSearchParams(0, 'Games')">Games</a></li>
+                                    <li><a href="#" ng-click="vm.setSearchParams(0, 'Books')">Books</a></li>
+                                    <li><a href="#" ng-click="vm.setSearchParams(0, 'Music')">Music</a></li>
+                                    <li><a href="#" ng-click="vm.setSearchParams(0, 'Art')">Art</a></li>
+                                </ul>
+                            </div>
+
+                            <!--Search By:-->
+                            <div class="col-md-4">
+                                <button class="btn btn-warning btn-sm btn-block dropdown-toggle cEditSearchForBy" type="button" data-toggle="dropdown">Search By: {{vm.contributionQuery.searchBy}}<span class="caret"></span></button>
+                                <ul class="dropdown-menu">
+                                    <li><a href="#" ng-click="vm.setSearchParams(1, 'Any')">Any</a></li>
+                                    <li><hr /></li>
+                                    <li><a href="#" ng-click="vm.setSearchParams(1, 'Title')">Title</a></li>
+                                    <li><a href="#" ng-click="vm.setSearchParams(1, 'Person')">Person</a></li>
+                                    <li><a href="#" ng-click="vm.setSearchParams(1, 'Genre')">Genre</a></li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div id="addSearchBarButton" class="row">
+                            <!--Search Bar:-->
+                            <div class="col-md-6">
+                                <input class="form-control" type="text" size="60" placeholder="Search the database" ng-model="vm.contributionQuery.query" />
+                            </div>
+
+                            <!--Search Button:-->
+                            <div class="col-md-3">
+                                <input id="contributionSearchButton" class="btn btn-primary" type="button" value="Search" ng-click="vm.searchContribution()" />
+                            </div>
+                        </div>
+                    </div>
+
+                    <!--Contribution Search Results Table:-->
+                    <div ng-show="vm.showMResults" class="mini-results">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Title</th>
+                                    <th>Type</th>
+                                    <th>Genre</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="media in vm.mResults">
+                                    <td ng-show="!media.added"><a href="entry/{{media.id}}">{{media.title}}</a></td>
+                                    <td ng-show="!media.added">{{media.type}}</td>
+                                    <td ng-show="!media.added">{{media.genre}}</td>
+                                    <td ng-show="!media.added"><input type="button" class="btn btn-primary" value="Add" ng-click="vm.addContribution($index)" /></td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <a href="#" ng-click="vm.addToDb()">Add a new media entry</a>
+                    </div>
+
+                    <!--Edit Buttons:-->
+                    <div class="row">
+                        <div class="col-md-4">
+                            <input type="submit" class="btn btn-success cem-marginBottom" value="Save Changes" />
+                            <input type="button" class="btn btn-danger cem-marginBottom" ng-click="vm.closeModal()" value="Cancel" />
+                        </div>
+
+                        <div class="col-md-2">
+                            <input ng-show="vm.contributor.isActive && vm.isAdmin == true" class="btn btn-warning cem-marginBottom" type="button" ng-click="vm.delete('soft')" value="Delete Entry" />
+                            <input ng-show="!vm.contributor.isActive && vm.isAdmin == true" class="btn btn-primary cem-marginBottom" type="button" ng-click="vm.delete('soft')" value="Restore Entry" />
+                        </div>
+                        
+                        <div class="col-md-1"></div>
+                        
+                        <input ng-show="vm.isAdmin == true" class="btn btn-danger cem-marginBottom" type="button" ng-click="vm.delete('hard')" value="Hard Delete" />
+                    </div>
+
+                </div>
+            </form>
+        </div>
+        
+    </div>
+</div>

@@ -17,6 +17,64 @@ var MyApp;
             controller: MyApp.Controllers.SearchController,
             controllerAs: 'vm'
         })
+            .when('/profile/:id', {
+            templateUrl: '/ngApp/views/profile.html',
+            controller: MyApp.Controllers.ProfileController,
+            controllerAs: 'vm'
+        })
+            .when('/contributor/:id', {
+            templateUrl: '/ngApp/views/contributor.html',
+            controller: MyApp.Controllers.ContributorController,
+            controllerAs: 'vm'
+        })
+            .when('/mylist', {
+            templateUrl: '/ngApp/views/myList.html',
+            controller: MyApp.Controllers.MainListController,
+            controllerAs: 'vm'
+        })
+            .when('/addtodb', {
+            templateUrl: '/ngApp/views/addToDatabase.html',
+            controller: MyApp.Controllers.AddToDbController,
+            controllerAs: 'vm'
+        })
+            .when('/review/:id', {
+            templateUrl: '/ngApp/views/review.html',
+            controller: MyApp.Controllers.ReviewController,
+            controllerAs: 'vm'
+        })
+            .when('/addsuccess', {
+            templateUrl: 'ngApp/views/addSuccess.html',
+            controller: MyApp.Controllers.AddSuccessController,
+            controllerAs: 'vm'
+        })
+            .when('/login', {
+            templateUrl: '/ngApp/views/login.html',
+            controller: MyApp.Controllers.LoginController,
+            controllerAs: 'controller'
+        })
+            .when('/register', {
+            templateUrl: '/ngApp/views/register.html',
+            controller: MyApp.Controllers.RegisterController,
+            controllerAs: 'controller'
+        })
+            .when('/registersuccess', {
+            templateUrl: '/ngApp/views/registerSuccess.html',
+            controller: MyApp.Controllers.regSuccessController,
+            controllerAs: 'vm'
+        })
+            .when('/about', {
+            templateUrl: '/ngApp/views/about.html',
+            controller: MyApp.Controllers.AboutController,
+            controllerAs: 'vm'
+        })
+            .when('/tour', {
+            templateUrl: '/ngApp/views/tour.html',
+        })
+            .when('/debug/dblist', {
+            templateUrl: '/ngApp/views/databaseList.html',
+            controller: MyApp.Controllers.DbListController,
+            controllerAs: 'vm'
+        })
             .when('/movies', {
             templateUrl: '/ngApp/views/movies.html',
             controller: MyApp.Controllers.MoviesController,
@@ -47,41 +105,6 @@ var MyApp;
             controller: MyApp.Controllers.ArtController,
             controllerAs: 'vm'
         })
-            .when('/mylist', {
-            templateUrl: '/ngApp/views/myList.html',
-            controller: MyApp.Controllers.MainListController,
-            controllerAs: 'vm'
-        })
-            .when('/addtodb', {
-            templateUrl: '/ngApp/views/addToDatabase.html',
-            controller: MyApp.Controllers.AddToDbController,
-            controllerAs: 'vm'
-        })
-            .when('/addsuccess', {
-            templateUrl: 'ngApp/views/addSuccess.html',
-            controller: MyApp.Controllers.AddSuccessController,
-            controllerAs: 'vm'
-        })
-            .when('/debug/dblist', {
-            templateUrl: '/ngApp/views/databaseList.html',
-            controller: MyApp.Controllers.DbListController,
-            controllerAs: 'vm'
-        })
-            .when('/about', {
-            templateUrl: '/ngApp/views/about.html',
-            controller: MyApp.Controllers.AboutController,
-            controllerAs: 'vm'
-        })
-            .when('/login', {
-            templateUrl: '/ngApp/views/login.html',
-            controller: MyApp.Controllers.LoginController,
-            controllerAs: 'controller'
-        })
-            .when('/register', {
-            templateUrl: '/ngApp/views/register.html',
-            controller: MyApp.Controllers.RegisterController,
-            controllerAs: 'controller'
-        })
             .when('/externalLogin', {
             templateUrl: '/ngApp/views/externalLogin.html',
             controller: MyApp.Controllers.ExternalLoginController,
@@ -98,7 +121,7 @@ var MyApp;
             controllerAs: 'controller'
         })
             .otherwise({
-            redirectTo: '/ngApp/views/notFound.html'
+            templateUrl: '/ngApp/views/notFound.html'
         });
         $locationProvider.html5Mode(true);
     });
@@ -197,7 +220,7 @@ var MyApp;
             RegisterController.prototype.register = function () {
                 var _this = this;
                 this.accountService.register(this.registerUser).then(function () {
-                    _this.$location.path('/login');
+                    _this.$location.path('/registersuccess');
                 }).catch(function (results) {
                     _this.validationMessages = results;
                 });
@@ -273,8 +296,6 @@ var MyApp;
             function AddSuccessController(MediaService) {
                 this.MediaService = MediaService;
                 this.lastCreated = this.MediaService.lastCreated;
-                console.log(this.MediaService.lastCreated);
-                console.log(this.lastCreated);
             }
             return AddSuccessController;
         })();
@@ -286,71 +307,167 @@ var MyApp;
     var Controllers;
     (function (Controllers) {
         var AddToDbController = (function () {
-            function AddToDbController(MediaService, $location) {
+            function AddToDbController(MediaService, $location, $uibModal) {
                 this.MediaService = MediaService;
                 this.$location = $location;
+                this.$uibModal = $uibModal;
                 this.contributorCounter = 0;
                 //Switches:
                 this.manualAdd = false;
                 this.contributorCreated = false;
                 this.cont = true;
+                this.validationError = false;
+                this.contributorValidationError = false;
+                this.dateRangeError = false;
+                this.contributorSelected = false;
+                this.searchContributions = false;
+                this.showMResults = false;
                 this.media = {};
                 this.contributor = {};
+                this.contributor.contributions = [];
                 this.media.contributors = [];
+                this.query = {};
+                this.query.query = "";
+                this.contributionQuery = {};
+                this.contributionQuery.query = "";
+                this.contributionQuery.searchFor = "All";
+                this.contributionQuery.searchBy = "Title";
                 //Define contributor object:
                 this.clearContributorFields();
-                //console.log(this.lastCreated);
             }
             AddToDbController.prototype.createMedia = function () {
                 var _this = this;
+                //Check to make sure there are no unsubmitted contributors:
                 if (this.manualAdd && !this.contributorCreated) {
                     this.cont = confirm("Your contributor will not be saved unless you click the 'submit contributor' button. \n\nContinue?");
                 }
+                else {
+                    this.cont = true;
+                }
                 if (this.cont) {
-                    //console.log(this.media.contributors);
-                    this.media.type = this.selectedType;
-                    this.media.isAnimation = JSON.parse(this.isAnimation);
                     this.year = Number(this.year);
-                    this.month = Number(this.month);
+                    this.month = Number(this.month) - 1;
                     this.day = Number(this.day);
-                    this.media.releaseDate = new Date(this.year, this.month, this.day);
-                    this.media.duration = Number(this.duration);
-                    this.media.isActive = true;
-                    console.log(this.media);
-                    this.MediaService.createMedia(this.media).then(function (data) {
-                        _this.MediaService.lastCreated = data;
-                        console.log(_this.MediaService.lastCreated);
-                        _this.$location.path('/addsuccess');
-                        //console.log(this.MediaService.lastCreated);
-                    });
+                    //Validate dates:
+                    if (this.year > 2100 || this.year < 1753) {
+                        this.dateRangeError = true;
+                    }
+                    else if (this.month > 11 || this.month < 1) {
+                        this.dateRangeError = true;
+                    }
+                    else if (this.day > 31 || this.day < 1) {
+                        this.dateRangeError = true;
+                    }
+                    else {
+                        this.dateRangeError = false;
+                    }
+                    if (!this.dateRangeError) {
+                        this.media.type = this.selectedType;
+                        this.media.isAnimation = JSON.parse(this.isAnimation);
+                        this.media.releaseDate = new Date(this.year, this.month, this.day);
+                        this.media.duration = Number(this.duration);
+                        this.media.isActive = true;
+                        this.MediaService.createMedia(this.media).then(function (data) {
+                            _this.MediaService.lastCreated = data;
+                            _this.$location.path('/addsuccess');
+                        });
+                    }
                 }
             };
-            AddToDbController.prototype.addContributorFromDb = function () {
-                //this.contributor = contributor from database
-                //this.addContributor();
-            };
-            AddToDbController.prototype.addContribution = function () {
-                var contribution; // = get this from the database
-                this.media.contributors[this.contributorCounter].contributions.push(contribution);
-            };
             AddToDbController.prototype.submitContributor = function () {
-                this.manualAdd = false;
-                //clear contributor fields
-                this.addContributor();
-            };
-            AddToDbController.prototype.addAnotherContributor = function () {
-                //clear fields
-                //this.createContributor();
-                this.contributorCreated = false;
+                //Validate contributor fields:
+                if (this.contributor.roles == "" || this.contributor.givenName == "" || this.contributor.surname == "" || this.contributorBYear == "" || this.contributorBMonth == "" || this.contributorBDay == "" || this.contributor.nationality == "") {
+                    this.contributorValidationError = true;
+                }
+                else {
+                    this.contributorValidationError = false;
+                    this.manualAdd = false;
+                    this.addContributor();
+                }
             };
             AddToDbController.prototype.addContributor = function () {
-                //console.log("c count: " + this.contributorCounter);
-                //console.log(this.contributor);
+                this.contributor.doB = new Date(this.contributorBYear, this.contributorBMonth - 1, this.contributorBDay);
+                this.contributor.isActive = true;
                 this.media.contributors[this.contributorCounter] = this.contributor;
-                this.media.contributors[this.contributorCounter].doB = new Date(this.contributorBYear, this.contributorBMonth, this.contributorBDay);
                 this.clearContributorFields();
                 this.contributorCreated = true;
                 this.contributorCounter++;
+            };
+            AddToDbController.prototype.addAnotherContributor = function () {
+                //Validate contributor fields:
+                if (this.contributor.roles == "" || this.contributor.givenName == "" || this.contributor.surname == "" || this.contributorBYear == "" || this.contributorBMonth == "" || this.contributorBDay == "" || this.contributor.nationality == "") {
+                    this.contributorValidationError = true;
+                }
+                else {
+                    this.contributorValidationError = false;
+                    this.addContributor();
+                    this.clearContributorFields();
+                    this.contributorCreated = false;
+                }
+            };
+            AddToDbController.prototype.cancelContributor = function () {
+                this.manualAdd = false;
+            };
+            AddToDbController.prototype.searchForContributor = function () {
+                var _this = this;
+                this.query.searchFor = "People";
+                this.MediaService.search(this.query).then(function (data) {
+                    _this.cResults = data.cResults;
+                    //Mark items that have already been added:
+                    for (var i = 0; i < _this.cResults.length; i++) {
+                        for (var j = 0; j < _this.media.contributors.length; j++) {
+                            if (_this.cResults[i].id == _this.media.contributors[j].id) {
+                                _this.cResults[i].added = true;
+                            }
+                        }
+                    }
+                });
+            };
+            AddToDbController.prototype.addContributorFromDb = function (index) {
+                if (!this.manualAdd) {
+                    this.contributor = this.cResults[index];
+                    this.media.contributors[this.contributorCounter] = this.contributor;
+                    this.contributorCounter++;
+                    this.cResults[index].added = true;
+                }
+                else {
+                    alert("You must complete or cancel adding a contributor manually first.");
+                }
+            };
+            AddToDbController.prototype.removeContributor = function (index) {
+                this.media.contributors[index].added = false;
+                this.media.contributors.splice(index, 1);
+                this.contributorCounter--;
+            };
+            AddToDbController.prototype.setSearchParams = function (parameter, value) {
+                if (parameter == 0) {
+                    this.contributionQuery.searchFor = value;
+                }
+                else {
+                    this.contributionQuery.searchBy = value;
+                }
+            };
+            AddToDbController.prototype.searchContribution = function () {
+                var _this = this;
+                this.MediaService.search(this.contributionQuery).then(function (data) {
+                    _this.mResults = data.results;
+                    _this.showMResults = true;
+                });
+            };
+            AddToDbController.prototype.addContribution = function (index) {
+                this.contributor.contributions.push(this.mResults[index]);
+                this.mResults[index].added = true;
+            };
+            AddToDbController.prototype.removeContribution = function (index) {
+                this.contributor.contributions[index].added = false;
+                this.contributor.contributions.splice(index, 1);
+            };
+            AddToDbController.prototype.setManualAdd = function () {
+                this.manualAdd = true;
+                this.clearContributorFields();
+            };
+            AddToDbController.prototype.showValidationErrors = function () {
+                this.validationError = true;
             };
             AddToDbController.prototype.clearContributorFields = function () {
                 this.contributor = {};
@@ -359,7 +476,7 @@ var MyApp;
                 this.contributorBYear = "";
                 this.contributor.roles = "";
                 this.contributor.givenName = "";
-                this.contributor.surName = "";
+                this.contributor.surname = "";
                 this.contributor.nationality = "";
                 this.contributor.websiteUrl = "";
                 this.contributor.description = "";
@@ -394,6 +511,197 @@ var MyApp;
         Controllers.BooksController = BooksController;
     })(Controllers = MyApp.Controllers || (MyApp.Controllers = {}));
 })(MyApp || (MyApp = {}));
+var MyApp;
+(function (MyApp) {
+    var Controllers;
+    (function (Controllers) {
+        var ContributorController = (function () {
+            function ContributorController(MediaService, accountService, $routeParams, $uibModal) {
+                var _this = this;
+                this.MediaService = MediaService;
+                this.accountService = accountService;
+                this.$routeParams = $routeParams;
+                this.$uibModal = $uibModal;
+                this.months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+                this.notFound = false;
+                this.showInactiveMessage = false;
+                this.showInactiveIndicator = false;
+                this.setUserInfo();
+                this.MediaService.getContributorById(this.$routeParams['id']).then(function (data) {
+                    _this.contributor = data;
+                    //If contributor exists:
+                    if (_this.contributor.id != undefined) {
+                        //If inactive and not admin, hide the page:
+                        if (!_this.contributor.isActive && !_this.isAdmin) {
+                            _this.showInactiveMessage = true;
+                        }
+                        else {
+                            //If inactive and admin, show an inactive indicator:
+                            if (!_this.contributor.isActive) {
+                                _this.showInactiveIndicator = true;
+                            }
+                            _this.dob = new Date(_this.contributor.dob);
+                            _this.dob = _this.months[_this.dob.getMonth() - 1] + " " + (_this.dob.getDate()) + ", " + _this.dob.getFullYear();
+                        }
+                    }
+                    else {
+                        _this.notFound = true;
+                    }
+                });
+            }
+            ContributorController.prototype.edit = function () {
+                this.openEditModal(this.contributor.id);
+            };
+            ContributorController.prototype.openEditModal = function (id) {
+                this.$uibModal.open({
+                    templateUrl: 'ngApp/views/Modals/contributorEditModal.html',
+                    controller: Controllers.ContributorEditController,
+                    controllerAs: 'vm',
+                    resolve: {
+                        contributorId: function () { return id; }
+                    },
+                    backdrop: 'static',
+                    keyboard: false,
+                    size: "lg"
+                });
+            };
+            ContributorController.prototype.setUserInfo = function () {
+                if (this.accountService.isLoggedIn() == null) {
+                    this.isLoggedIn = false;
+                    this.isAdmin = false;
+                }
+                else {
+                    this.isLoggedIn = true;
+                    if (this.accountService.getClaim("Admin") == null) {
+                        this.isAdmin = false;
+                    }
+                    else {
+                        this.isAdmin = true;
+                    }
+                }
+            };
+            return ContributorController;
+        })();
+        Controllers.ContributorController = ContributorController;
+    })(Controllers = MyApp.Controllers || (MyApp.Controllers = {}));
+})(MyApp || (MyApp = {}));
+var MyApp;
+(function (MyApp) {
+    var Controllers;
+    (function (Controllers) {
+        var ContributorEditController = (function () {
+            function ContributorEditController(contributorId, MediaService, accountService, $uibModalInstance, $location) {
+                var _this = this;
+                this.contributorId = contributorId;
+                this.MediaService = MediaService;
+                this.accountService = accountService;
+                this.$uibModalInstance = $uibModalInstance;
+                this.$location = $location;
+                this.isAdmin = false;
+                this.addContributions = false;
+                this.showMResults = false;
+                this.MediaService.getContributorById(this.contributorId).then(function (data) {
+                    _this.contributor = data;
+                    _this.dob = new Date(_this.contributor.dob);
+                    _this.year = _this.dob.getFullYear();
+                    _this.month = _this.dob.getMonth();
+                    _this.day = _this.dob.getDate();
+                });
+                this.setUserInfo();
+                this.genericVm = {};
+                this.contributionQuery = {};
+                this.contributionQuery.query = "";
+                this.contributionQuery.searchFor = "All";
+                this.contributionQuery.searchBy = "Title";
+            }
+            ContributorEditController.prototype.setUserInfo = function () {
+                if (this.accountService.isLoggedIn() == null) {
+                    this.isLoggedIn = false;
+                    this.isAdmin = false;
+                }
+                else {
+                    this.isLoggedIn = true;
+                    if (this.accountService.getClaim("Admin") == null) {
+                        this.isAdmin = false;
+                    }
+                    else {
+                        this.isAdmin = true;
+                    }
+                }
+            };
+            ContributorEditController.prototype.saveChanges = function () {
+                this.contributor.dob = new Date(this.year, this.month, this.day);
+                this.MediaService.editContributor(this.contributor).then(function () {
+                    window.location.reload();
+                });
+            };
+            ContributorEditController.prototype.delete = function (mode) {
+                var _this = this;
+                this.genericVm.string1 = mode;
+                this.genericVm.int1 = this.contributor.id;
+                if (mode == 'soft') {
+                    this.MediaService.deleteContributor(this.genericVm).then(function () {
+                        window.location.reload();
+                    });
+                }
+                else {
+                    var cont = confirm("This entry will be permanently deleted from the database. Continue?");
+                    if (cont) {
+                        this.MediaService.deleteContributor(this.genericVm).then(function () {
+                            _this.closeModal();
+                            window.history.back();
+                            window.location.reload();
+                        });
+                    }
+                }
+            };
+            ContributorEditController.prototype.setSearchParams = function (parameter, value) {
+                if (parameter == 0) {
+                    this.contributionQuery.searchFor = value;
+                }
+                else {
+                    this.contributionQuery.searchBy = value;
+                }
+            };
+            ContributorEditController.prototype.searchContribution = function () {
+                var _this = this;
+                this.MediaService.search(this.contributionQuery).then(function (data) {
+                    _this.mResults = data.results;
+                    //Mark existing contributions to prevent them from showing up in the search results:
+                    for (var i = 0; i < _this.mResults.length; i++) {
+                        for (var j = 0; j < _this.contributor.contributions.length; j++) {
+                            if (_this.mResults[i].id == _this.contributor.contributions[j].id) {
+                                _this.mResults[i].added = true;
+                            }
+                        }
+                    }
+                    _this.showMResults = true;
+                });
+            };
+            ContributorEditController.prototype.addContribution = function (index) {
+                this.contributor.contributions.push(this.mResults[index]);
+                this.mResults[index].added = true;
+            };
+            ContributorEditController.prototype.removeContribution = function (index) {
+                this.contributor.contributions[index].added = false;
+                this.contributor.contributions.splice(index, 1);
+            };
+            ContributorEditController.prototype.addToDb = function () {
+                //if (form was touched or contributors were changed)
+                var cont = confirm("Your changes will be lost. Continue?");
+                if (cont) {
+                    this.closeModal();
+                    this.$location.path("/addtodb");
+                }
+            };
+            ContributorEditController.prototype.closeModal = function () {
+                this.$uibModalInstance.close();
+            };
+            return ContributorEditController;
+        })();
+        Controllers.ContributorEditController = ContributorEditController;
+    })(Controllers = MyApp.Controllers || (MyApp.Controllers = {}));
+})(MyApp || (MyApp = {}));
 //namespace MyApp.Controllers {
 //    export class HomeController {
 //        public movies;
@@ -412,6 +720,7 @@ var MyApp;
 (function (MyApp) {
     var Controllers;
     (function (Controllers) {
+        //This controller is currently unused:
         var DbListController = (function () {
             function DbListController(MediaService, $uibModal, $location) {
                 var _this = this;
@@ -430,6 +739,8 @@ var MyApp;
                     resolve: {
                         mediaId: function () { return id; }
                     },
+                    backdrop: 'static',
+                    keyboard: false,
                     size: "lg"
                 });
             };
@@ -437,6 +748,7 @@ var MyApp;
         })();
         Controllers.DbListController = DbListController;
         angular.module('MyApp').controller('DbListController', DbListController);
+        //TODO: move this controller into its own file
         var DbEditController = (function () {
             function DbEditController(mediaId, MediaService, accountService, $uibModalInstance, $routeParams) {
                 var _this = this;
@@ -450,23 +762,35 @@ var MyApp;
                 this.manualAdd = false;
                 this.contributorCreated = false;
                 this.cont = true;
+                this.validationError = false;
+                this.contributorValidationError = false;
+                this.dateRangeError = false;
+                this.contributorSelected = false;
+                this.searchContributions = false;
+                this.showMResults = false;
                 this.media = {};
                 this.contributor = {};
-                this.contributorVm = {};
                 this.media.contributors = [];
+                this.query = {};
+                this.query.query = "";
+                this.contributionQuery = {};
+                this.contributionQuery.query = "";
+                this.contributionQuery.searchFor = "All";
+                this.contributionQuery.searchBy = "Title";
                 this.setUserInfo();
-                console.log(this.isLoggedIn);
-                console.log(this.isAdmin);
+                //Define contributor object:
+                this.clearContributorFields();
                 this.MediaService.getMediaById(this.mediaId).then(function (data) {
                     _this.media = data;
-                    //Need logic to do initialized appropriate properties based on media type
+                    //Need logic to initialize appropriate properties based on media type
                     _this.selectedType = _this.media.type;
                     _this.releaseDate = new Date(_this.media.releaseDate);
                     _this.year = _this.releaseDate.getFullYear();
                     _this.month = _this.releaseDate.getMonth();
-                    _this.day = _this.releaseDate.getDay();
+                    _this.day = _this.releaseDate.getDate();
                     _this.isAnimation = _this.media.isAnimation.toString();
                     _this.duration = _this.media.duration;
+                    _this.contributorCounter = _this.media.contributors.length;
                 });
             }
             DbEditController.prototype.updateEntry = function () {
@@ -479,7 +803,6 @@ var MyApp;
                 this.media.duration = Number(this.duration);
                 this.media.contributorCreated = this.contributorCreated;
                 this.media.isActive = true;
-                console.log(this.media);
                 this.MediaService.createMedia(this.media).then(function () {
                     window.location.reload();
                 });
@@ -509,54 +832,110 @@ var MyApp;
                 var cont = confirm("This entry will be permanently deleted from the database. Continue?");
                 if (cont) {
                     this.MediaService.deleteMedia(this.media.id);
+                    this.closeModal();
+                    window.history.back();
                     window.location.reload();
                 }
             };
             DbEditController.prototype.closeModal = function () {
                 this.$uibModalInstance.close();
             };
-            DbEditController.prototype.removeContributor = function (contributorId) {
-                var _this = this;
-                this.contributorVm.mediaId = this.media.id;
-                this.contributorVm.contributorId = contributorId;
-                this.MediaService.removeContributor(this.contributorVm).then(function () {
-                    _this.updateEntry();
-                });
-            };
-            DbEditController.prototype.addContributorFromDb = function () {
-                //this.contributor = contributor from database
-                //this.addContributor();
-            };
-            DbEditController.prototype.addContribution = function () {
-                var contribution; // = get this from the database
-                this.media.contributors[this.contributorCounter].contributions.push(contribution);
-            };
             DbEditController.prototype.submitContributor = function () {
-                this.manualAdd = false;
-                //clear contributor fields
-                this.addContributor();
-            };
-            DbEditController.prototype.addAnotherContributor = function () {
-                //clear fields
-                //this.createContributor();
-                this.contributorCreated = false;
+                //Validate contributor fields:
+                if (this.contributor.roles == "" || this.contributor.givenName == "" || this.contributor.surname == "" || this.contributorBYear == "" || this.contributorBMonth == "" || this.contributorBDay == "" || this.contributor.nationality == "") {
+                    console.log(this.contributor);
+                    this.contributorValidationError = true;
+                }
+                else {
+                    this.contributorValidationError = false;
+                    this.manualAdd = false;
+                    this.addContributor();
+                }
             };
             DbEditController.prototype.addContributor = function () {
+                this.contributor.doB = new Date(this.contributorBYear, this.contributorBMonth - 1, this.contributorBDay);
+                this.contributor.isActive = true;
+                this.media.contributors[this.contributorCounter] = this.contributor;
+                this.clearContributorFields();
+                this.contributorCreated = true;
+                this.contributorCounter++;
+            };
+            DbEditController.prototype.addAnotherContributor = function () {
+                //Validate contributor fields:
+                if (this.contributor.roles == "" || this.contributor.givenName == "" || this.contributor.surname == "" || this.contributorBYear == "" || this.contributorBMonth == "" || this.contributorBDay == "" || this.contributor.nationality == "") {
+                    console.log(this.contributor);
+                    this.contributorValidationError = true;
+                }
+                else {
+                    this.contributorValidationError = false;
+                    this.addContributor();
+                    this.clearContributorFields();
+                    this.contributorCreated = false;
+                }
+            };
+            DbEditController.prototype.cancelContributor = function () {
+                this.manualAdd = false;
+            };
+            DbEditController.prototype.searchForContributor = function () {
                 var _this = this;
-                //console.log("c count: " + this.contributorCounter);
-                //console.log(this.contributor);
-                //this.media.contributors[this.contributorCounter] = this.contributor;
-                //this.media.contributors[this.contributorCounter].doB = new Date(this.contributorBYear, this.contributorBMonth, this.contributorBDay);
-                //console.log(this.media.contributors);
-                //this.clearContributorFields();
-                //this.contributorCreated = true;
-                //this.contributorCounter++;
-                this.contributor.doB = new Date(this.contributorBYear, this.contributorBMonth, this.contributorBDay);
-                this.contributorVm.mediaId = this.media.id;
-                this.contributorVm.contributor = this.contributor;
-                this.MediaService.addContributor(this.contributorVm).then(function () {
-                    _this.contributorCreated = true;
+                this.query.searchFor = "People";
+                this.MediaService.search(this.query).then(function (data) {
+                    _this.cResults = data.cResults;
+                    //Mark items that have already been added:
+                    for (var i = 0; i < _this.cResults.length; i++) {
+                        for (var j = 0; j < _this.media.contributors.length; j++) {
+                            if (_this.cResults[i].id == _this.media.contributors[j].id) {
+                                _this.cResults[i].added = true;
+                            }
+                        }
+                    }
                 });
+            };
+            DbEditController.prototype.addContributorFromDb = function (index) {
+                if (!this.manualAdd) {
+                    this.contributor = this.cResults[index];
+                    this.media.contributors[this.contributorCounter] = this.contributor;
+                    this.contributorCounter++;
+                    this.cResults[index].added = true;
+                }
+                else {
+                    alert("You must complete or cancel adding a contributor manually first.");
+                }
+            };
+            DbEditController.prototype.removeContributor = function (index) {
+                this.media.contributors[index].added = false;
+                this.media.contributors.splice(index, 1);
+                this.contributorCounter--;
+            };
+            DbEditController.prototype.setSearchParams = function (parameter, value) {
+                if (parameter == 0) {
+                    this.contributionQuery.searchFor = value;
+                }
+                else {
+                    this.contributionQuery.searchBy = value;
+                }
+            };
+            DbEditController.prototype.searchContribution = function () {
+                var _this = this;
+                this.MediaService.search(this.contributionQuery).then(function (data) {
+                    _this.mResults = data.results;
+                    _this.showMResults = true;
+                });
+            };
+            DbEditController.prototype.addContribution = function (index) {
+                this.contributor.contributions.push(this.mResults[index]);
+                this.mResults[index].added = true;
+            };
+            DbEditController.prototype.removeContribution = function (index) {
+                this.contributor.contributions[index].added = false;
+                this.contributor.contributions.splice(index, 1);
+            };
+            DbEditController.prototype.setManualAdd = function () {
+                this.manualAdd = true;
+                this.clearContributorFields();
+            };
+            DbEditController.prototype.showValidationErrors = function () {
+                this.validationError = true;
             };
             DbEditController.prototype.clearContributorFields = function () {
                 this.contributor = {};
@@ -565,7 +944,7 @@ var MyApp;
                 this.contributorBYear = "";
                 this.contributor.roles = "";
                 this.contributor.givenName = "";
-                this.contributor.surName = "";
+                this.contributor.surname = "";
                 this.contributor.nationality = "";
                 this.contributor.websiteUrl = "";
                 this.contributor.description = "";
@@ -582,51 +961,81 @@ var MyApp;
     var Controllers;
     (function (Controllers) {
         var EntryController = (function () {
-            function EntryController(MediaService, accountService, $routeParams, $uibModal) {
+            function EntryController(MediaService, accountService, $routeParams, $uibModal, $location) {
                 var _this = this;
                 this.MediaService = MediaService;
                 this.accountService = accountService;
                 this.$routeParams = $routeParams;
                 this.$uibModal = $uibModal;
+                this.$location = $location;
                 this.months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
                 this.cast = [];
                 this.roles = [];
                 this.directors = [];
                 this.writers = [];
+                this.otherContributors = [];
+                this.notFound = false;
+                this.showInactiveMessage = false;
+                this.showInactiveIndicator = false;
                 this.changeListVm = {};
                 this.checkListVm = {};
+                this.reviewVm = {};
+                this.setUserInfo();
                 this.MediaService.getMediaById(this.$routeParams['id']).then(function (data) {
                     _this.media = data;
-                    _this.releaseDate = new Date(_this.media.releaseDate);
-                    _this.releaseDate = _this.months[_this.releaseDate.getMonth()] + " " + _this.releaseDate.getDate() + ", " + _this.releaseDate.getFullYear();
-                    _this.setUserInfo();
-                    for (var i = 0; i < _this.media.contributors.length; i++) {
-                        if (_this.media.contributors[i].roles == "Actor") {
-                            _this.cast.push(_this.media.contributors[i]);
-                            _this.roles.push("Add Role");
+                    //If media exists:
+                    if (_this.media.id != undefined) {
+                        if (_this.isLoggedIn) {
+                            _this.checkMasterlist();
                         }
-                        else if (_this.media.contributors[i].roles == "Director") {
-                            _this.directors.push(_this.media.contributors[i]);
+                        //If media is inactive and the user is not admin, hide the page:
+                        if (!_this.media.isActive && !_this.isAdmin) {
+                            _this.showInactiveMessage = true;
                         }
-                        else if (_this.media.contributors[i].roles == "Writer") {
-                            _this.writers.push(_this.media.contributors[i]);
+                        else {
+                            if (!_this.media.isActive) {
+                                _this.showInactiveIndicator = true;
+                            }
+                            _this.releaseDate = new Date(_this.media.releaseDate);
+                            _this.releaseDate = _this.months[_this.releaseDate.getMonth()] + " " + _this.releaseDate.getDate() + ", " + _this.releaseDate.getFullYear();
+                            //Separate contributors by type:
+                            for (var i = 0; i < _this.media.contributors.length; i++) {
+                                if (_this.media.contributors[i].roles == "Actor") {
+                                    _this.cast.push(_this.media.contributors[i]);
+                                    _this.roles.push("Add Role");
+                                }
+                                else if (_this.media.contributors[i].roles == "Director") {
+                                    _this.directors.push(_this.media.contributors[i]);
+                                    _this.hasStaff = true;
+                                }
+                                else if (_this.media.contributors[i].roles == "Writer") {
+                                    _this.writers.push(_this.media.contributors[i]);
+                                    _this.hasStaff = true;
+                                }
+                                else {
+                                    _this.otherContributors.push(_this.media.contributors[i]);
+                                }
+                            }
                         }
+                    }
+                    else {
+                        _this.notFound = true;
                     }
                 });
             }
             EntryController.prototype.setUserInfo = function () {
                 if (this.accountService.isLoggedIn() == null) {
                     this.isLoggedIn = false;
+                    this.isAdmin = false;
                 }
                 else {
                     this.isLoggedIn = true;
-                    if (this.accountService.getClaim("admin") == null) {
+                    if (this.accountService.getClaim("Admin") == null) {
                         this.isAdmin = false;
                     }
                     else {
                         this.isAdmin = true;
                     }
-                    this.checkMasterlist();
                 }
             };
             EntryController.prototype.openEditModal = function (id) {
@@ -637,6 +1046,8 @@ var MyApp;
                     resolve: {
                         mediaId: function () { return id; }
                     },
+                    backdrop: 'static',
+                    keyboard: false,
                     size: "lg"
                 });
             };
@@ -645,6 +1056,7 @@ var MyApp;
                 this.checkListVm.mediaId = this.media.id;
                 this.MediaService.checkMasterlist(this.checkListVm).then(function (data) {
                     _this.hasInList = data.result;
+                    _this.hasReviewed = data.secondaryResult;
                 });
             };
             EntryController.prototype.addToList = function () {
@@ -669,6 +1081,29 @@ var MyApp;
                         _this.showListLink = false;
                     }
                 });
+            };
+            EntryController.prototype.writeReview = function () {
+                if (!this.isLoggedIn) {
+                    this.$location.path('/register');
+                }
+                else if (!this.hasInList) {
+                    this.showReviewError = true;
+                }
+                else {
+                    this.$location.path('/review/' + this.media.id);
+                }
+            };
+            EntryController.prototype.editReview = function () {
+                this.$location.path('/review/' + this.media.id);
+            };
+            EntryController.prototype.deleteReview = function () {
+                this.reviewVm.mediaId = this.media.id;
+                var cont = confirm("Are you sure?");
+                if (cont) {
+                    this.MediaService.deleteReview(this.reviewVm).then(function () {
+                        window.location.reload();
+                    });
+                }
             };
             return EntryController;
         })();
@@ -751,7 +1186,6 @@ var MyApp;
                         while (!quit && i < _this.masterList[j].userMedias.length) {
                             if (_this.masterList[j].userMedias[i].ownerId == _this.user.id) {
                                 _this.masterList[j].rating = _this.masterList[j].userMedias[i].rating;
-                                //let defaultDate = new Date(1800, 1, 1);
                                 var startDate = new Date(_this.masterList[j].userMedias[i].startDate);
                                 if (startDate.getFullYear() != 1800) {
                                     _this.masterList[j].startDateYear = startDate.getFullYear();
@@ -928,35 +1362,41 @@ var MyApp;
                 this.$location = $location;
                 this.MediaService = MediaService;
                 this.accountService = accountService;
-                this.isLoggedIn();
-                //this.accountService.getUserInfo(this.accountService.isLoggedIn()).then((data) => {
-                //    this.userInfo = data;
-                //    this.userName = this.userInfo.email;
-                //    this.MediaService.user = data;
-                //    this.MediaService.user.isLoggedIn = this.loggedIn;
-                //    console.log(this.MediaService.user);
-                //});
+                this.searchForPerson = false;
+                this.sbLastSet = "Title";
+                this.mouseHover = false;
+                this.setUserInfo();
                 this.MediaService.getUser("thisUser").then(function (data) {
                     _this.userInfo = data;
                     _this.userName = _this.userInfo.userName;
                     _this.MediaService.user = data;
-                    _this.MediaService.user.isLoggedIn = _this.loggedIn;
+                    _this.MediaService.user.isLoggedIn = _this.isLoggedIn;
                 });
                 this.query = {};
                 this.query.searchFor = "All";
                 this.query.searchBy = "Title";
                 this.query.query = "";
+                this.query.includeDeleted = false;
+                this.query.onlyDeleted = false;
+                this.MediaService.searchTransport = {};
             }
             NavController.prototype.logout = function () {
                 this.accountService.logout();
-                this.loggedIn = false;
+                this.isLoggedIn = false;
             };
-            NavController.prototype.isLoggedIn = function () {
+            NavController.prototype.setUserInfo = function () {
                 if (this.accountService.isLoggedIn() == null) {
-                    this.loggedIn = false;
+                    this.isLoggedIn = false;
+                    this.isAdmin = false;
                 }
                 else {
-                    this.loggedIn = true;
+                    this.isLoggedIn = true;
+                    if (this.accountService.getClaim("Admin") == null) {
+                        this.isAdmin = false;
+                    }
+                    else {
+                        this.isAdmin = true;
+                    }
                 }
             };
             NavController.prototype.openLoginModal = function () {
@@ -969,21 +1409,45 @@ var MyApp;
             NavController.prototype.setParams = function (parameter, value) {
                 if (parameter == 0) {
                     this.query.searchFor = value;
+                    if (value == "People" || value == "Users") {
+                        this.query.searchBy = "Name";
+                        this.searchForPerson = true;
+                    }
+                    else {
+                        if (this.query.searchBy == "Name") {
+                            this.query.searchBy = this.sbLastSet;
+                        }
+                        this.searchForPerson = false;
+                    }
                 }
                 else {
                     this.query.searchBy = value;
+                    this.sbLastSet = value;
                 }
             };
             NavController.prototype.search = function () {
                 var _this = this;
                 this.MediaService.search(this.query).then(function (data) {
-                    _this.results = data.results;
-                    _this.MediaService.searchTransport = _this.results;
-                    console.log(_this.results);
+                    if (_this.query.searchFor == "People") {
+                        console.log(data);
+                        _this.MediaService.searchTransport = data.cResults;
+                        _this.MediaService.searchTransport.dataType = "People";
+                    }
+                    else if (_this.query.searchFor == "Users") {
+                        _this.MediaService.searchTransport = data.uResults;
+                        _this.MediaService.searchTransport.dataType = "Users";
+                    }
+                    else {
+                        _this.MediaService.searchTransport = data.results;
+                        _this.MediaService.searchTransport.dataType = "Media";
+                    }
                     if (window.location.pathname != '/search') {
                         _this.$location.path('/search');
                     }
                 });
+            };
+            NavController.prototype.setMouseHover = function (hover) {
+                this.mouseHover = hover;
             };
             return NavController;
         })();
@@ -995,11 +1459,118 @@ var MyApp;
 (function (MyApp) {
     var Controllers;
     (function (Controllers) {
+        var ProfileController = (function () {
+            function ProfileController(MediaService, $routeParams) {
+                var _this = this;
+                this.MediaService = MediaService;
+                this.$routeParams = $routeParams;
+                this.MediaService.getUserById(this.$routeParams['id']).then(function (data) {
+                    _this.owner = data;
+                    console.log(_this.owner);
+                });
+            }
+            return ProfileController;
+        })();
+        Controllers.ProfileController = ProfileController;
+    })(Controllers = MyApp.Controllers || (MyApp.Controllers = {}));
+})(MyApp || (MyApp = {}));
+var MyApp;
+(function (MyApp) {
+    var Controllers;
+    (function (Controllers) {
+        var regSuccessController = (function () {
+            function regSuccessController(accountService, $location) {
+                this.accountService = accountService;
+                this.$location = $location;
+                this.setUserInfo();
+                //If the user logs in, redirect to home:
+                if (this.isLoggedIn) {
+                    this.$location.path('/');
+                }
+            }
+            regSuccessController.prototype.setUserInfo = function () {
+                if (this.accountService.isLoggedIn() == null) {
+                    this.isLoggedIn = false;
+                    this.isAdmin = false;
+                }
+                else {
+                    this.isLoggedIn = true;
+                    if (this.accountService.getClaim("Admin") == null) {
+                        this.isAdmin = false;
+                    }
+                    else {
+                        this.isAdmin = true;
+                    }
+                }
+            };
+            return regSuccessController;
+        })();
+        Controllers.regSuccessController = regSuccessController;
+    })(Controllers = MyApp.Controllers || (MyApp.Controllers = {}));
+})(MyApp || (MyApp = {}));
+var MyApp;
+(function (MyApp) {
+    var Controllers;
+    (function (Controllers) {
+        var ReviewController = (function () {
+            function ReviewController(MediaService, $location, $routeParams) {
+                var _this = this;
+                this.MediaService = MediaService;
+                this.$location = $location;
+                this.$routeParams = $routeParams;
+                this.reviewWritten = false;
+                this.review = {};
+                this.MediaService.getMediaById(this.$routeParams['id']).then(function (data) {
+                    _this.media = data;
+                    _this.MediaService.getUserId().then(function (data) {
+                        _this.userId = data.message;
+                        //If editing review, load old review data:
+                        for (var i = 0; i < _this.media.reviews.length; i++) {
+                            if (_this.media.reviews[i].ownerId == _this.userId) {
+                                _this.existingReview = _this.media.reviews[i];
+                                _this.content = _this.existingReview.content;
+                                _this.review.score = _this.existingReview.score.toString();
+                                _this.reviewWritten = true;
+                            }
+                        }
+                        //If not editing review, check for an existing rating:
+                        if (_this.reviewWritten == false) {
+                            for (var i = 0; i < _this.media.userMedias.length; i++) {
+                                if (_this.media.userMedias[i].ownerId == _this.userId) {
+                                    _this.review.score = _this.media.userMedias[i].rating.toString();
+                                }
+                            }
+                        }
+                    });
+                });
+            }
+            ReviewController.prototype.submit = function () {
+                var _this = this;
+                this.review.content = this.content;
+                this.review.mediaId = this.media.id;
+                this.MediaService.addReview(this.review).then(function () {
+                    _this.$location.path('/entry/' + _this.media.id);
+                });
+            };
+            ReviewController.prototype.cancel = function () {
+                //if textarea is touched, warn and confirm
+                this.$location.path('/entry/' + this.media.id);
+            };
+            return ReviewController;
+        })();
+        Controllers.ReviewController = ReviewController;
+    })(Controllers = MyApp.Controllers || (MyApp.Controllers = {}));
+})(MyApp || (MyApp = {}));
+var MyApp;
+(function (MyApp) {
+    var Controllers;
+    (function (Controllers) {
         var SearchController = (function () {
             //public changeListVm;
             //public addStatus;
             //public hasInList = false;
             //public showListLink;
+            //search results are gotten directly from the media service
             function SearchController(MediaService, accountService) {
                 this.MediaService = MediaService;
                 this.accountService = accountService;
@@ -1024,6 +1595,18 @@ var MyApp;
             return SearchController;
         })();
         Controllers.SearchController = SearchController;
+    })(Controllers = MyApp.Controllers || (MyApp.Controllers = {}));
+})(MyApp || (MyApp = {}));
+var MyApp;
+(function (MyApp) {
+    var Controllers;
+    (function (Controllers) {
+        var searchModalController = (function () {
+            function searchModalController() {
+            }
+            return searchModalController;
+        })();
+        Controllers.searchModalController = searchModalController;
     })(Controllers = MyApp.Controllers || (MyApp.Controllers = {}));
 })(MyApp || (MyApp = {}));
 var MyApp;
@@ -1187,11 +1770,13 @@ var MyApp;
     var Services;
     (function (Services) {
         var MediaService = (function () {
+            //public mediaTransport;
             function MediaService($resource) {
                 this.$resource = $resource;
                 this.user = {};
                 this.user.isLoggedIn = false;
                 this.user.isAdmin = false;
+                this.idContainer = {};
                 this.mediaResource = $resource('api/media/:id', null, {
                     addToDb: {
                         url: "/api/media/addToDb",
@@ -1217,13 +1802,41 @@ var MyApp;
                         url: "/api/media/addContributor",
                         method: "POST"
                     },
+                    addReview: {
+                        url: "/api/media/addReview",
+                        method: "POST"
+                    },
+                    getReviews: {
+                        url: "/api/media/getReviews",
+                        method: "POST"
+                    },
+                    deleteReview: {
+                        url: "/api/media/deleteReview",
+                        method: "DELETE"
+                    },
                     removeContributor: {
                         url: "/api/media/removeContributor",
+                        method: "POST"
+                    },
+                    editContributor: {
+                        url: "/api/media/editContributor",
+                        method: "POST"
+                    },
+                    deleteContributor: {
+                        url: "/api/media/deleteContributor",
                         method: "POST"
                     },
                     getUserId: {
                         url: "/api/media/getUserId",
                         method: "GET"
+                    },
+                    getUserById: {
+                        url: "/api/media/getUserById",
+                        method: "POST"
+                    },
+                    getContributorById: {
+                        url: "/api/media/getContributorById",
+                        method: "POST"
                     },
                     delete: {
                         url: "/api/media/delete",
@@ -1242,8 +1855,16 @@ var MyApp;
             MediaService.prototype.getMediaById = function (id) {
                 return this.mediaResource.get({ id: id }).$promise;
             };
+            MediaService.prototype.getContributorById = function (id) {
+                this.idContainer.errorCode = id; //update this name and/or consolidate these into the GenericVm
+                return this.mediaResource.getContributorById(this.idContainer).$promise;
+            };
             MediaService.prototype.getCurrentUser = function () {
                 return this.user;
+            };
+            MediaService.prototype.getUserById = function (id) {
+                this.idContainer.message = id;
+                return this.mediaResource.getUserById(this.idContainer).$promise;
             };
             MediaService.prototype.getUserId = function () {
                 return this.mediaResource.getUserId().$promise;
@@ -1272,15 +1893,37 @@ var MyApp;
             MediaService.prototype.removeContributor = function (contributorVm) {
                 return this.mediaResource.removeContributor(contributorVm).$promise;
             };
+            MediaService.prototype.editContributor = function (contributor) {
+                return this.mediaResource.editContributor(contributor).$promise;
+            };
+            MediaService.prototype.deleteContributor = function (genericVm) {
+                return this.mediaResource.deleteContributor(genericVm).$promise;
+            };
+            MediaService.prototype.addReview = function (review) {
+                return this.mediaResource.addReview(review).$promise;
+            };
+            MediaService.prototype.getReviews = function (reviewVm) {
+                return this.mediaResource.getReviews(reviewVm).$promise;
+            };
+            MediaService.prototype.deleteReview = function (reviewVm) {
+                return this.mediaResource.deleteReview(reviewVm).$promise;
+            };
             MediaService.prototype.deleteMedia = function (id) {
                 this.mediaResource.delete({ id: id });
             };
-            MediaService.prototype.sortStaff = function (array) {
-                for (var i = 0; i < array.length; i++) {
-                    if (array[i] == "director") {
-                    }
-                }
-            };
+            //public storeMedia(media) {
+            //    return localStorage.setItem("mediaTransport", media);
+            //}
+            //public getMediaTransport() {
+            //    return localStorage.getItem("mediaTransport").$promise;
+            //}
+            //public sortStaff(array) {
+            //    for (let i = 0; i < array.length; i++) {
+            //        if (array[i] == "director") {
+            //            //move to front
+            //        }
+            //    }
+            //}
             MediaService.prototype.debugSeed = function () {
                 this.mediaResource.debugSeed();
             };
@@ -1294,6 +1937,7 @@ var MyApp;
 (function (MyApp) {
     var Services;
     (function (Services) {
+        //Unused:
         var MovieService = (function () {
             function MovieService($resource) {
                 this.MovieResource = $resource('/api/movies/:id');

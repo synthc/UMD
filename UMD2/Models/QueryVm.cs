@@ -11,6 +11,10 @@ namespace UMD2.Models
         public string SearchFor { get; set; }
         public string SearchBy { get; set; }
         public string Query { get; set; }
+        public bool IncludeDeleted { get; set; }
+        public bool OnlyDeleted { get; set; }
         public List<Media> Results { get; set; }
+        public List<Contributor> CResults { get; set; }
+        public List<ApplicationUser> UResults { get; set; }
     }
 }

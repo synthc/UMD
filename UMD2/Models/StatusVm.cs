@@ -12,6 +12,7 @@ namespace UMD2.Models
         public bool Error { get; set; }
         public int ErrorCode { get; set; }
         public bool Result { get; set; }
+        public bool SecondaryResult { get; set; }
         public string ResultMessage { get; set; }
     }
 }

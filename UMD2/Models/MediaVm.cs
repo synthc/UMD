@@ -9,10 +9,7 @@ namespace UMD2.Models
     //This model must have all properties from all media child models
     public class MediaVm
     {
-        //VM properties:
-        //public int Year { get; set; }
-        //public int Month { get; set; }
-        //public int Day { get; set; }
+        //View model properties:
         public bool DeleteRestore { get; set; }
         //Parent properties:
         public int Id { get; set; }
@@ -31,7 +28,6 @@ namespace UMD2.Models
         public string PageUrl { get; set; }
         public string Genre { get; set; }
         public List<Review> Reviews { get; set; }
-        //public DateTime UserDateAdded { get; set; }
         public string Status { get; set; }
         public int Rating { get; set; }
         public List<string> Tags { get; set; }

@@ -78,12 +78,12 @@
     <div class="form-group">
         <div class="row">
             <div class="col-md-4">
-                <h3 ng-show="vm.statusVerb == 'Watch'">Times Re-watched:</h3>
-                <h3 ng-show="vm.statusVerb == 'Play'">Times Re-played:</h3>
-                <h3 ng-show="vm.statusVerb == 'Read'">Times Re-read:</h3>
-                <h3 ng-show="vm.statusVerb == 'Watch'">Rewatch Value:</h3>
-                <h3 ng-show="vm.statusVerb == 'Play'">Replay Value:</h3>
-                <h3 ng-show="vm.statusVerb == 'Read'">Reread Value:</h3>
+                <h3 ng-if="vm.statusVerb == 'Watch'">Times Re-watched:</h3>
+                <h3 ng-if="vm.statusVerb == 'Play'">Times Re-played:</h3>
+                <h3 ng-if="vm.statusVerb == 'Read'">Times Re-read:</h3>
+                <h3 ng-if="vm.statusVerb == 'Watch'">Rewatch Value:</h3>
+                <h3 ng-if="vm.statusVerb == 'Play'">Replay Value:</h3>
+                <h3 ng-if="vm.statusVerb == 'Read'">Reread Value:</h3>
             </div>
             <div class="col-md-3">
                 <br />

@@ -1,5 +1,6 @@
 ﻿namespace MyApp.Controllers {
 
+    //This controller is currently unused:
     export class DbListController {
         public media;
         public medias;
@@ -18,6 +19,8 @@
                 resolve: {
                     mediaId: () => id
                 },
+                backdrop: 'static',
+                keyboard: false,
                 size: "lg"
             });
         }
@@ -25,18 +28,17 @@
 
     angular.module('MyApp').controller('DbListController', DbListController);
 
+    //TODO: move this controller into its own file
     export class DbEditController {
+        //Angular Fields for Media:
         public media;
-        public contributorVm;
-        public isLoggedIn;
-        public isAdmin;
-        public selectedType;
         public releaseDate;
+        public selectedType;
         public year: number;
         public month: number;
         public day: number;
         public duration: number;
-        public isAnimation: string;
+        public isAnimation;
 
         //Angular Fields for Contributor:
         public contributor;
@@ -49,26 +51,48 @@
         public manualAdd = false;
         public contributorCreated = false;
         public cont = true;
+        public validationError = false;
+        public contributorValidationError = false;
+        public dateRangeError = false;
+        public contributorSelected = false;
+        public searchContributions = false;
+        public showMResults = false;
+
+        //Other:
+        public isLoggedIn;
+        public isAdmin;
+        public lastCreated;
+        public query;
+        public cResults;
+        public contributionQuery;
+        public mResults;
 
         constructor(private mediaId, private MediaService: MyApp.Services.MediaService, private accountService: MyApp.Services.AccountService, private $uibModalInstance: angular.ui.bootstrap.IModalServiceInstance, private $routeParams: ng.route.IRouteParamsService) {
             this.media = {};
             this.contributor = {};
-            this.contributorVm = {};
             this.media.contributors = [];
+            this.query = {};
+            this.query.query = "";
+            this.contributionQuery = {};
+            this.contributionQuery.query = "";
+            this.contributionQuery.searchFor = "All";
+            this.contributionQuery.searchBy = "Title";
             this.setUserInfo();
-            console.log(this.isLoggedIn);
-            console.log(this.isAdmin);
+
+            //Define contributor object:
+            this.clearContributorFields();
 
             this.MediaService.getMediaById(this.mediaId).then((data) => {
                 this.media = data;
-                //Need logic to do initialized appropriate properties based on media type
+                //Need logic to initialize appropriate properties based on media type
                 this.selectedType = this.media.type;
                 this.releaseDate = new Date(this.media.releaseDate);
                 this.year = this.releaseDate.getFullYear();
                 this.month = this.releaseDate.getMonth();
-                this.day = this.releaseDate.getDay();
+                this.day = this.releaseDate.getDate();
                 this.isAnimation = this.media.isAnimation.toString();
                 this.duration = this.media.duration;
+                this.contributorCounter = this.media.contributors.length;
             });
         }
 
@@ -82,8 +106,6 @@
             this.media.duration = Number(this.duration);
             this.media.contributorCreated = this.contributorCreated;
             this.media.isActive = true;
-
-            console.log(this.media);
 
             this.MediaService.createMedia(this.media).then(() => {
                 window.location.reload();
@@ -108,7 +130,6 @@
 
         public deleteRestore() {
             this.media.deleteRestore = true;
-
             this.MediaService.createMedia(this.media);
             this.closeModal();
             window.location.reload();
@@ -118,6 +139,8 @@
             let cont = confirm("This entry will be permanently deleted from the database. Continue?");
             if (cont) {
                 this.MediaService.deleteMedia(this.media.id);
+                this.closeModal();
+                window.history.back();
                 window.location.reload();
             }
         }
@@ -126,52 +149,113 @@
             this.$uibModalInstance.close();
         }
 
-        public removeContributor(contributorId) {
-            this.contributorVm.mediaId = this.media.id;
-            this.contributorVm.contributorId = contributorId;
-            this.MediaService.removeContributor(this.contributorVm).then(() => {
-                this.updateEntry();
-            });
-        }
-
-        public addContributorFromDb() {
-            //this.contributor = contributor from database
-            //this.addContributor();
-        }
-
-        public addContribution() {
-            var contribution; // = get this from the database
-            this.media.contributors[this.contributorCounter].contributions.push(contribution);
-        }
-
         public submitContributor() {
-            this.manualAdd = false;
-            //clear contributor fields
-            this.addContributor();
-        }
-
-        public addAnotherContributor() {
-            //clear fields
-            //this.createContributor();
-            this.contributorCreated = false;
+            //Validate contributor fields:
+            if (this.contributor.roles == "" || this.contributor.givenName == "" || this.contributor.surname == "" || this.contributorBYear == "" || this.contributorBMonth == "" || this.contributorBDay == "" || this.contributor.nationality == "") {
+                console.log(this.contributor);
+                this.contributorValidationError = true;
+            }
+            else {
+                this.contributorValidationError = false;
+                this.manualAdd = false;
+                this.addContributor();
+            }
         }
 
         private addContributor() {
-            //console.log("c count: " + this.contributorCounter);
-            //console.log(this.contributor);
-            //this.media.contributors[this.contributorCounter] = this.contributor;
-            //this.media.contributors[this.contributorCounter].doB = new Date(this.contributorBYear, this.contributorBMonth, this.contributorBDay);
-            //console.log(this.media.contributors);
-            //this.clearContributorFields();
-            //this.contributorCreated = true;
-            //this.contributorCounter++;
-            this.contributor.doB = new Date(this.contributorBYear, this.contributorBMonth, this.contributorBDay);
-            this.contributorVm.mediaId = this.media.id;
-            this.contributorVm.contributor = this.contributor;
-            this.MediaService.addContributor(this.contributorVm).then(() => {
-                this.contributorCreated = true;
-            });
+            this.contributor.doB = new Date(this.contributorBYear, this.contributorBMonth - 1, this.contributorBDay);
+            this.contributor.isActive = true;
+            this.media.contributors[this.contributorCounter] = this.contributor;
+            this.clearContributorFields();
+            this.contributorCreated = true;
+            this.contributorCounter++;
+        }
 
+        public addAnotherContributor() {
+            //Validate contributor fields:
+            if (this.contributor.roles == "" || this.contributor.givenName == "" || this.contributor.surname == "" || this.contributorBYear == "" || this.contributorBMonth == "" || this.contributorBDay == "" || this.contributor.nationality == "") {
+                console.log(this.contributor);
+                this.contributorValidationError = true;
+            }
+            else {
+                this.contributorValidationError = false;
+                this.addContributor();
+                this.clearContributorFields();
+                this.contributorCreated = false;
+            }
+        }
+
+        public cancelContributor() {
+            this.manualAdd = false;
+        }
+
+        public searchForContributor() {
+            this.query.searchFor = "People";
+            this.MediaService.search(this.query).then((data) => {
+                this.cResults = data.cResults;
+
+                //Mark items that have already been added:
+                for (let i = 0; i < this.cResults.length; i++) {
+                    for (let j = 0; j < this.media.contributors.length; j++) {
+                        if (this.cResults[i].id == this.media.contributors[j].id) {
+                            this.cResults[i].added = true;
+                        }
+                    }
+                }
+            });
+        }
+
+        public addContributorFromDb(index: number) {
+            if (!this.manualAdd) {
+                this.contributor = this.cResults[index];
+                this.media.contributors[this.contributorCounter] = this.contributor;
+                this.contributorCounter++;
+                this.cResults[index].added = true;
+            }
+            else {
+                alert("You must complete or cancel adding a contributor manually first.");
+            }
+        }
+
+        public removeContributor(index: number) {
+            this.media.contributors[index].added = false;
+            this.media.contributors.splice(index, 1);
+            this.contributorCounter--;
+        }
+
+        public setSearchParams(parameter: number, value: string) {
+            if (parameter == 0) {
+                this.contributionQuery.searchFor = value;
+            }
+            else {
+                this.contributionQuery.searchBy = value;
+            }
+        }
+
+        public searchContribution() {
+            this.MediaService.search(this.contributionQuery).then((data) => {
+                this.mResults = data.results;
+                this.showMResults = true;
+            });
+        }
+
+        public addContribution(index: number) {
+            this.contributor.contributions.push(this.mResults[index]);
+            this.mResults[index].added = true;
+        }
+
+        public removeContribution(index: number) {
+            this.contributor.contributions[index].added = false;
+            this.contributor.contributions.splice(index, 1);
+        }
+
+        public setManualAdd() {
+            this.manualAdd = true;
+            this.clearContributorFields();
+        }
+
+        public showValidationErrors() {
+            this.validationError = true;
         }
 
         public clearContributorFields() {
@@ -181,7 +265,7 @@
             this.contributorBYear = "";
             this.contributor.roles = "";
             this.contributor.givenName = "";
-            this.contributor.surName = "";
+            this.contributor.surname = "";
             this.contributor.nationality = "";
             this.contributor.websiteUrl = "";
             this.contributor.description = "";

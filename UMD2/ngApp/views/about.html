@@ -1,12 +1,99 @@
 ﻿<div class="container">
-    <h1>About</h1>
+    <div class="text-center">
+        <h1 class="sectionHeader">Welcome to the Universal Media Database</h1>
 
-    <p>
-        Keep track of all your media.  Add movies, TV shows, games, books, music and art to your master list; rate each item you add and keep track of your start and finish dates.
-        Discuss movies, episodes, games, songs, and etc. with other users.
-    </p>
-    <br />
-    <p>Add media to custom lists consisting of one or more different types (e.g. a "Best Psychological Horror" could contain your top picks from movies, games, books, and TV shows) and share this lists with other users or on social media.</p>
-    <br />
-    <p>Read and write reviews, view and sort media by average user rating, and get recommendations based on your highly rated items.</p>
+        <p class="aboutText">
+            Keep track of all your media.  Add movies, TV shows, games, books, music and art to your master list. Rate each item you add and keep track of your start and finish dates.
+            Discuss movies, episodes, games, songs, and etc. with other users.
+        </p>
+        <br />
+        <p class="aboutText">Add media to custom lists consisting of one or more different types (e.g. a "Best Psychological Horror" could contain your top picks from movies, games, books, and TV shows) and share these lists with other users or on social media.</p>
+        <br />
+        <p class="aboutText">Read and write reviews, view and sort media by average user rating, and get recommendations based on your highly rated items.</p>
+
+        <div>
+            <div class="panel panel-success">
+                <div class="panel-heading"></div>
+                <div class="panel-body">
+                    <p class="aboutText"><a href="/tour">Click here</a> for a tour of the site and its features.</p>
+                    <p class="aboutText"><a href="/register">Click here</a> to create an account.</p>
+                    <p class="aboutText"><a href="/">Click here</a> to go to the home page.</p>
+                </div>
+            </div>
+        </div>
+
+        <h2 class="sectionHeader">This site is under contruction.</h2>
+
+        <div>
+            <div class="panel panel-primary">
+                <div class="panel-heading"></div>
+                <div class="panel-body">
+                    <p class="aboutText">Currently only Chrome and Firefox are supported.  You may experience problems with other browsers.</p>
+                </div>
+            </div>
+        </div>
+
+        <h3 class="sectionHeader">Currently implemented features:</h3>
+    </div>
+    <div class="row">
+        <div class="col-md-2"></div>
+        <div class="col-md-10">
+            <ul class="aboutList">
+                <li class="aboutList">Users can create a new account and log in.</li>
+                <li class="aboutList">Users can seach for movies and people.</li>
+                <li class="aboutList">Users can add movies to their masterlist.</li>
+                <li class="aboutList">Users can rate and review movies.</li>
+                <li class="aboutList">Users can add personal information about a movie in their masterlist (such as when they watched it and how many times they have rewatched it).</li>
+                <li class="aboutList">Users can create new public movie entries that they and other users can add to their lists.</li>
+                <li class="aboutList">Users can create new contributors (e.g. actors and directors) entries and attribute them to one or more movies.</li>
+                <li class="aboutList">Users can edit movie and contributor entries.</li>
+                <li class="aboutList">User ratings are averaged and displayed on the entry page.</li>
+                <li class="aboutList">Top rated movies are displayed on the home page.</li>
+                <li class="aboutList">Administrators can soft or hard delete entries.</li>
+                <li class="aboutList">Administrators can search for and edit or restore soft deleted entries.</li>
+            </ul>
+        </div>
+    </div>
+    <div class="text-center"><h3 class="sectionHeader">High priority planned features:</h3></div>
+    <div class="row">
+        <div class="col-md-2"></div>
+        <div class="col-md-10">
+            <ul class="aboutList">
+                <li class="aboutList">A profile page where users can see their own profile all of their own lists and information, as well as other user's profiles.</li>
+                <li class="aboutList">Pagination and query restrictions for searches—for scalability and to prevent unnecessary server traffic.</li>
+                <li class="aboutList">Pagination on automatically generated lists.</li>
+                <li class="aboutList">Ability to add character roles to actors.</li>
+                <li class="aboutList">Ability for users to create custom lists with unique, sharable URLs.</li>
+                <li class="aboutList">Ability to share lists and reviews on social media.</li>
+                <li class="aboutList">Ability to sort by column and search within any list.</li>
+                <li class="aboutList">Ability to browse media by type.</li>
+                <li class="aboutList">Many general UI and ease of use enhancements, such as a warning when attempting to navigate away from an imcomplete form.</li>
+                <li class="aboutList">General visual enhancements, including properly responsive pages.</li>
+                <li class="aboutList">Search on enter when adding or editing entries.</li>
+                <li class="aboutList">More efficient search algorithm—get rid of .ToLower's, and replace nested loops with hashtable lookups.</li>
+                <li class="aboutList">More efficient handling of triple nested objects—prevent duplicates when adding nested objects without removing objects and re-adding them by reference.</li>
+                <li class="aboutList">Ability for adiminstrators to search for and restrict, ban, or permanently delete users.</li>
+                <li class="aboutList">Email verification for new user accounts.</li>
+                <li class="aboutList">Recording of user IDs when a user edits an entry—to prevent abuse.</li>
+                <li class="aboutList">Content checking and sanitization of user input to combat malicious users.</li>
+            </ul>
+        </div>
+    </div>
+    <div class="text-center"><h3 class="sectionHeader">Future features:</h3></div>
+    <div class="row">
+        <div class="col-md-2"></div>
+        <div class="col-md-10">
+            <ul class="aboutList">
+                <li class="aboutList">Implementation of other media types (TV shows, games, music, books, and art).</li>
+                <li class="aboutList">Automatic retrieval of metadata when adding a new entry (using APIs such as Rotten Tomatoes and Musicbrainz).</li>
+                <li class="aboutList">Ability to comment on entries and reviews.</li>
+                <li class="aboutList">Ability to automatically add entire entries to the database using APIs.</li>
+                <li class="aboutList">Private messaging system.</li>
+                <li class="aboutList">Episode/chapter/movie discussions.</li>
+                <li class="aboutList">Full discussion board.</li>
+                <li class="aboutList">Ability to write recommendations/comparitive reviews.</li>
+                <li class="aboutList">Automatic recommendations based on the ratings of items in users' lists.</li>
+            </ul>
+        </div>
+    </div>
 </div>

@@ -19,25 +19,21 @@ namespace UMD.API
             this.repo = repo;
         }
 
+        //Get all media:
         public IHttpActionResult Get()
         {
-            var user = User.Identity as ClaimsIdentity;
-
-            if (user.HasClaim("Denied", "true"))
-            {
-                return Unauthorized();
-            }
-
             var data = repo.GetMedia();
             return Ok(data);
         }
 
+        //Get a media by id:
         public IHttpActionResult Get(int id)
         {
             var data = repo.GetMediaById(id);
             return Ok(data);
         }
 
+        //Get current user or get user by username:
         public IHttpActionResult Get(string userName)
         {
             string userId = null;
@@ -55,8 +51,20 @@ namespace UMD.API
             return Ok(data);
         }
 
+        [Route("api/media/getUserById")]
+        public IHttpActionResult _GetUserById(StatusVm idContainer)
+        {
+            return Ok(repo.GetUserById(idContainer.Message));
+        }
+
+        [Route("api/media/getContributorById")]
+        public IHttpActionResult _GetContributorById(StatusVm idContainer)
+        {
+            return Ok(repo.GetContributorById(idContainer.ErrorCode));
+        }
+
         [Route("api/media/getUserId")]
-        public IHttpActionResult getUserId()
+        public IHttpActionResult GetUserId()
         {
             StatusVm returnObj = new StatusVm();
             returnObj.Message = User.Identity.GetUserId();
@@ -118,6 +126,56 @@ namespace UMD.API
         }
 
         [Authorize]
+        [Route("api/media/editContributor")]
+        public IHttpActionResult EditContributor(Contributor contributor)
+        {
+            repo.EditContributor(contributor);
+            return Ok();
+        }
+
+        [Authorize]
+        [Route("api/media/deleteContributor")]
+        public IHttpActionResult _DeleteContributor(GenericVm vm)
+        {
+            var user = User.Identity as ClaimsIdentity;
+            if (!user.HasClaim("Admin", "true"))
+            {
+                return Unauthorized();
+            }
+
+            repo.DeleteContributor(vm);
+            return Ok();
+        }
+
+        [Authorize]
+        [Route("api/media/addReview")]
+        public IHttpActionResult AddReview(Review vm)
+        {
+            vm.OwnerId = User.Identity.GetUserId();
+            repo.AddReview(vm);
+            return Ok();
+        }
+
+        [Route("api/media/getReviews")]
+        public IHttpActionResult _GetReviews(ReviewVm vm)
+        {
+            return Ok(repo.GetReviews(vm));
+        }
+
+        [Authorize]
+        [Route("api/media/deleteReview")]
+        public IHttpActionResult DeleteReview(int mediaId)
+        {
+            ReviewVm vm = new ReviewVm
+            {
+                MediaId = mediaId,
+                UserId = User.Identity.GetUserId()
+            };
+            repo.DeleteReview(vm);
+            return Ok();
+        }
+
+        [Authorize]
         [Route("api/media/delete")]
         public IHttpActionResult Delete(int id)
         {
@@ -131,9 +189,16 @@ namespace UMD.API
             return Ok();
         }
 
+        [Authorize]
         [Route("api/media/debugSeed")]
         public IHttpActionResult DebugSeed()
         {
+            var user = User.Identity as ClaimsIdentity;
+            if (!user.HasClaim("Admin", "true"))
+            {
+                return Unauthorized();
+            }
+
             repo.DebugSeed();
             return Ok();
         }

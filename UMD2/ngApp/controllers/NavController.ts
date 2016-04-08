@@ -1,47 +1,53 @@
 ﻿namespace MyApp.Controllers {
 
     export class NavController {
-        public loggedIn: boolean;
+        public isLoggedIn;
+        public isAdmin;
         public userInfo;
         public userName;
 
         public query;
-        public results;
+        public searchForPerson = false;
+        public sbLastSet = "Title";
+        public mouseHover = false;
 
-        constructor(private $uibModal: angular.ui.bootstrap.IModalService, private $location: ng.ILocationService, private MediaService: MyApp.Services.MediaService, private accountService: MyApp.Services.AccountService) { 
-            this.isLoggedIn();
-            //this.accountService.getUserInfo(this.accountService.isLoggedIn()).then((data) => {
-            //    this.userInfo = data;
-            //    this.userName = this.userInfo.email;
-            //    this.MediaService.user = data;
-            //    this.MediaService.user.isLoggedIn = this.loggedIn;
-            //    console.log(this.MediaService.user);
-            //});
+        constructor(private $uibModal: angular.ui.bootstrap.IModalService, private $location: ng.ILocationService, private MediaService: MyApp.Services.MediaService, private accountService: MyApp.Services.AccountService) {
+            this.setUserInfo();
 
             this.MediaService.getUser("thisUser").then((data) => {
                 this.userInfo = data;
                 this.userName = this.userInfo.userName;
                 this.MediaService.user = data;
-                this.MediaService.user.isLoggedIn = this.loggedIn;
+                this.MediaService.user.isLoggedIn = this.isLoggedIn;
             });
 
             this.query = {};
             this.query.searchFor = "All";
             this.query.searchBy = "Title";
             this.query.query = "";
+            this.query.includeDeleted = false;
+            this.query.onlyDeleted = false;
+            this.MediaService.searchTransport = {};
         }
 
         public logout() {
             this.accountService.logout();
-            this.loggedIn = false;
+            this.isLoggedIn = false;
         }
 
-        public isLoggedIn() {
+        public setUserInfo() {
             if (this.accountService.isLoggedIn() == null) {
-                this.loggedIn = false;
+                this.isLoggedIn = false;
+                this.isAdmin = false;
             }
             else {
-                this.loggedIn = true;
+                this.isLoggedIn = true;
+                if (this.accountService.getClaim("Admin") == null) {
+                    this.isAdmin = false;
+                }
+                else {
+                    this.isAdmin = true;
+                }
             }
         }
 
@@ -56,30 +62,49 @@
         public setParams(parameter: number, value: string) {
             if (parameter == 0) {
                 this.query.searchFor = value;
+
+                if (value == "People" || value == "Users") {
+                    this.query.searchBy = "Name";
+                    this.searchForPerson = true;
+                }
+                else {
+                    if (this.query.searchBy == "Name") {
+                        this.query.searchBy = this.sbLastSet;
+                    }
+                    this.searchForPerson = false;
+                }
             }
             else {
                 this.query.searchBy = value;
+                this.sbLastSet = value;
             }
-        } 
+        }
 
-        public search (){
+        public search() {
             this.MediaService.search(this.query).then((data) => {
-                this.results = data.results;
-                this.MediaService.searchTransport = this.results;
-                console.log(this.results);
+                if (this.query.searchFor == "People") {
+                    console.log(data);
+                    this.MediaService.searchTransport = data.cResults;
+                    this.MediaService.searchTransport.dataType = "People";
+                }
+                else if (this.query.searchFor == "Users") {
+                    this.MediaService.searchTransport = data.uResults;
+                    this.MediaService.searchTransport.dataType = "Users";
+                }
+                else {
+                    this.MediaService.searchTransport = data.results;
+                    this.MediaService.searchTransport.dataType = "Media";
+                }
                 if (window.location.pathname != '/search') {
                     this.$location.path('/search');
                 }
             })
         }
+
+        public setMouseHover(hover: boolean) {
+            this.mouseHover = hover;
+        }
     }
 
     angular.module('MyApp').controller('NavController', NavController);
-
-    //export class LoginModalController { //already a login controller in accountController.ts
-    //    constructor(private $uibModalInstance: angular.ui.bootstrap.IModalServiceInstance) {
-
-    //    }
-
-        
-    }
+}

@@ -1,0 +1,401 @@
+﻿<div class="container">
+    <div class="text-center">
+        <h1 class="sectionHeader">Create Entry</h1>
+    </div>
+    <form name="addForm" novalidate> <!--ng-submit="addForm.$valid && vm.createMedia()-->
+        <div class="row">
+            <div class="col-md-2"></div>
+            <div class="col-md-8">
+                <div class="form-group">
+                    <h3  class="sectionHeader">General Information:</h3>
+                    <div class="form-control; row">
+                        <div class="col-md-4">
+                            <label class="generalLabel">Media Type</label>
+                        </div>
+                        <div class="col-md-8">
+                            <div id="typeRadios" class="radio">
+                                <label><input type="radio" value="movie" name="type" ng-model="vm.selectedType" />Movie</label>
+                                <label><input type="radio" value="series" name="type" ng-model="vm.selectedType" />TV Series</label>
+                                <label><input type="radio" value="game" name="type" ng-model="vm.selectedType" />Game</label>
+                                <label><input type="radio" value="book" name="type" ng-model="vm.selectedType" />Book</label>
+                                <label><input type="radio" value="music" name="type" ng-model="vm.selectedType" />Music</label>
+                                <label><input type="radio" value="art" name="type" ng-model="vm.selectedType" required />Art</label>
+                                <p ng-show="addForm.type.$invalid == true && vm.validationError == true" class="error"> Media type is required.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-control; row">
+                    <div class="col-md-4">
+                        <label class="generalLabel">Title</label>
+                    </div>
+                    <div class="col-md-8">
+                        <input name="title" class="generalFields" type="text" size="45" placeholder="" ng-model="vm.media.title" required />
+                        <p ng-show="addForm.title.$invalid == true && vm.validationError == true" class="error"> Title is required.</p>
+                    </div>
+                </div>
+                <div class="form-control; row">
+                    <div class="col-md-4">
+                        <label class="generalLabel">Release Date </label>
+                    </div>
+                    <div class="col-md-8">
+                        <input class="generalFields dateFields" type="number" name="year" min="1753" max="2100" placeholder="Year (1753+)" ng-model="vm.year" required />
+                        <input class="generalFields dateFields" type="number" name="month" min="1" max="12" placeholder="Month (1-12)" ng-model="vm.month" required />
+                        <input class="generalFields dateFields" type="number" name="day" min="1" max="31" placeholder="Day (1-31)" ng-model="vm.day" required />
+                        <p ng-show="vm.validationError == true && addForm.year.$invalid == true || vm.validationError == true && addForm.month.$invalid == true || vm.validationError == true && addForm.day.$invalid == true" class="error space-left">
+                            Year, month, and day are required.
+                            <br />
+                            Year must be a number between 1753 and 2100, month must be a number between 1 and 12, and day must be a number between 1 and 31.
+                        </p>
+                    </div>
+
+                </div>
+                <div class="form-control; row">
+                    <div class="col-md-4">
+                        <label class="generalLabel">Description/Synopsis</label>
+                    </div>
+                    <div class="col-md-8">
+                        <textarea class="generalFields" name="description" cols="47" rows="4" ng-model="vm.media.description" required></textarea>
+                        <p ng-show="addForm.description.$invalid == true && vm.validationError == true" class="error"> Description is required.</p>
+                    </div>
+                </div>
+                <div class="form-control; row">
+                    <div class="col-md-4">
+                        <label class="generalLabel">Country of Origin</label>
+                    </div>
+                    <div class="col-md-8">
+                        <input class="generalFields" type="text" name="countryOfOrigin" size="45" placeholder="" ng-model="vm.media.countryOfOrigin" required />
+                        <p ng-show="addForm.countryOfOrigin.$invalid == true && vm.validationError == true" class="error"> Country of origin is required.</p>
+                    </div>
+                </div>
+                <div class="form-control; row">
+                    <div class="col-md-4">
+                        <label class="generalLabel">Genre</label>
+                    </div>
+                    <div class="col-md-8">
+                        <input class="generalFields" type="text" name="genre" size="45" placeholder="" ng-model="vm.media.genre" required/>
+                        <p ng-show="addForm.genre.$invalid == true && vm.validationError == true" class="error"> Genre is required.</p>
+                    </div>
+                </div>
+                <div class="form-control; row">
+                    <div class="col-md-4">
+                        <label class="generalLabel">Thumbnail URL</label>
+                    </div>
+                    <div class="col-md-8">
+                        <input class="generalFields" type="text" name="thumbnail" size="45" placeholder="" ng-model="vm.media.thumbnailUrl" required />
+                        <p ng-show="addForm.thumbnail.$invalid == true && vm.validationError == true" class="error"> Thumbnail Url is required.</p>
+                    </div>
+                </div>
+
+                <h3 class="sectionHeader" style="text-transform: capitalize" ng-show="vm.selectedType">{{vm.selectedType}} Information:</h3>
+
+                <!--if (movie)-->
+                <div ng-show="vm.selectedType == 'movie'">
+                    <div class="form-control; row">
+                        <div class="col-md-4">
+                            <label class="generalLabel">Duration</label>
+                        </div>
+                        <div class="col-md-8">
+                            <input class="generalFields" type="number" name="duration" size="45" min="1" max="99999" placeholder="Minutes" ng-model="vm.duration" required />
+                            <p ng-show="addForm.duration.$invalid == true && vm.validationError == true" class="error"> Duration is required.</p>
+                        </div>
+                    </div>
+
+                    <div class="form-control; row">
+                        <div class="col-md-4">
+                            <label class="generalLabel">Animation</label>
+                        </div>
+                        <div class="col-md-8">
+                            <div id="animationRadios" class="radio">
+                                <label><input class="generalFields" type="radio" value="true" name="animation" ng-model="vm.isAnimation" required />Yes</label>
+                                <label><input class="generalFields" type="radio" value="false" name="animation" ng-model="vm.isAnimation" required />No</label>
+                                <p ng-show="addForm.animation.$invalid == true && vm.validationError == true" class="error"> Is-animation is required.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-control; row">
+                        <div class="col-md-4">
+                            <label class="generalLabel">Language</label>
+                        </div>
+                        <div class="col-md-8">
+                            <input class="generalFields" type="text" size="45" placeholder="" ng-model="vm.media.language" />
+                        </div>
+                    </div>
+
+                    <div class="form-control; row">
+                        <div class="col-md-4">
+                            <label class="generalLabel">Add Contributors</label>
+                        </div>
+                        <div class="col-md-8">
+                            <input class="generalFields" type="text" size="35" ng-model="vm.query.query" placeholder="Search the database" />
+                            <button class="btn btn-success btn-sm" type="button" style="background-color: #16ae16 !important" ng-click="vm.searchForContributor()">Search</button>
+                            
+                            <!--Contributor Search Results Table:-->
+                            <div class="mini-results" ng-show="vm.cResults">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th>Name</th>
+                                            <th>Roles</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr ng-repeat="contributor in vm.cResults">
+                                            <td ng-show="!contributor.added == true"><a href="contributor/{{contributor.id}}">{{contributor.givenName}} {{contributor.surname}}</a></td>
+                                            <td ng-show="!contributor.added == true">{{contributor.roles}}</td>
+                                            <td ng-show="!contributor.added == true"><button class="btn btn-primary btn-sm" type="button" ng-click="vm.addContributorFromDb($index)">Add</button></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <!--<input type="checkbox" value="true" ng-model="vm.manualAdd" /><label>Add a new contributor</label>-->
+                                <a href="#" ng-show="vm.manualAdd == false" ng-click="vm.setManualAdd()">Add a new contributor</a>
+                            </div>
+                            <br />
+
+                           <!--Current Contributor Table:-->
+                            <div class="mini-results">
+                                <h3>Contributors:</h3>
+                                <table id="editModalCList" class="table">
+                                    <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Name</th>
+                                            <th>Role</th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr ng-repeat="contributor in vm.media.contributors">
+                                            <td>{{$index + 1}}</td>
+                                            <td class="col-md-4">{{contributor.givenName}} {{contributor.surname}}</td>
+                                            <td>{{contributor.roles}}</td>
+                                            <td><input type="button" class="btn btn-danger btn-sm" value="Remove" ng-click="vm.removeContributor($index)" /></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!--Contributor Fields:-->
+                    <div ng-show="vm.manualAdd">
+                        <h3  class="sectionHeader">Create Contributor Entry:</h3>
+
+                        <div class="form-control; row">
+                            <div class="col-md-4">
+                                <label class="generalLabel">Role(s)*</label>
+                            </div>
+                            <div class="col-md-8">
+                                <input class="generalFields" type="text" size="45" placeholder="Actor, director, writer, composer, etc..." ng-model="vm.contributor.roles" />
+                            </div>
+                        </div>
+
+                        <div class="form-control; row">
+                            <div class="col-md-4">
+                                <label class="generalLabel">First Name*</label>
+                            </div>
+                            <div class="col-md-8">
+                                <input class="generalFields" type="text" size="45" ng-model="vm.contributor.givenName" />
+                            </div>
+                        </div>
+
+                        <div class="form-control; row">
+                            <div class="col-md-4">
+                                <label class="generalLabel">Last Name*</label>
+                            </div>
+                            <div class="col-md-8">
+                                <input class="generalFields" type="text" size="45" ng-model="vm.contributor.surname" />
+                            </div>
+                        </div>
+
+                        <div class="form-control; row">
+                            <div class="col-md-4">
+                                <label class="generalLabel">Date of Birth*</label>
+                            </div>
+                            <div class="col-md-8">
+                                <input class="generalFields dateFields" type="number" min="1753" max="2100" placeholder="Year (1753+)" ng-model="vm.contributorBYear" />
+                                <input class="generalFields dateFields" type="number" min="1" max="12" placeholder="Month (1-12)" ng-model="vm.contributorBMonth" />
+                                <input class="generalFields dateFields " type="number" min="1" max="31" placeholder="Day (1-31)" ng-model="vm.contributorBDay" />
+                            </div>
+                        </div>
+
+                        <div class="form-control; row">
+                            <div class="col-md-4">
+                                <label class="generalLabel">Nationality*</label>
+                            </div>
+                            <div class="col-md-8">
+                                <input class="generalFields" type="text" size="45" ng-model="vm.contributor.nationality" />
+                            </div>
+                        </div>
+
+                        <div class="form-control; row">
+                            <div class="col-md-4">
+                                <label class="generalLabel">Website</label>
+                            </div>
+                            <div class="col-md-8">
+                                <input class="generalFields" type="text" placeholder="Enter the address of the person's website"
+                                       size="45" ng-model="vm.contributor.websiteUrl" />
+                            </div>
+                        </div>
+
+                        <div class="form-control; row">
+                            <div class="col-md-4">
+                                <label class="generalLabel">Profile Image URL</label>
+                            </div>
+                            <div class="col-md-8">
+                                <input class="generalFields" type="text" placeholder="Enter the address of a photo of the person"
+                                       size="45" ng-model="vm.contributor.thumbnailUrl" />
+                            </div>
+                        </div>
+
+                        <div class="form-control; row">
+                            <div class="col-md-4">
+                                <label class="generalLabel">Short Bio</label>
+                            </div>
+                            <div class="col-md-8">
+                                <textarea class="generalFields" cols="47" rows="4" ng-model="vm.contributor.description"></textarea>
+                            </div>
+                        </div>
+
+                        <div class="form-control; row">
+                            <div class="col-md-4">
+                                <label class="generalLabel">Other Contributions</label>
+                            </div>
+                            <div class="col-md-8">
+                                <input id="contributionCheckbox" type="checkbox" value="true" ng-model="vm.searchContributions" /><label>Add other contributions</label>
+                                
+                                <!--Media Search Elements:-->
+                                <div ng-show="vm.searchContributions">
+                                    <div class="row">
+                                        <!--Search For:-->
+                                        <div id="addSearchFor" class="col-md-4">
+                                            <button class="btn btn-success btn-sm btn-block dropdown-toggle addSearchForBy" type="button" data-toggle="dropdown">Search For: {{vm.contributionQuery.searchFor}}<span class="caret"></span></button>
+                                            <ul class="dropdown-menu">
+                                                <li><a href="#" ng-click="vm.setSearchParams(0, 'All')">All Media</a></li>
+                                                <li><hr /></li>
+                                                <li><a href="#" ng-click="vm.setSearchParams(0, 'Movies')">Movies</a></li>
+                                                <li><a href="#" ng-click="vm.setSearchParams(0, 'Series')">TV Series</a></li>
+                                                <li><a href="#" ng-click="vm.setSearchParams(0, 'Games')">Games</a></li>
+                                                <li><a href="#" ng-click="vm.setSearchParams(0, 'Books')">Books</a></li>
+                                                <li><a href="#" ng-click="vm.setSearchParams(0, 'Music')">Music</a></li>
+                                                <li><a href="#" ng-click="vm.setSearchParams(0, 'Art')">Art</a></li>
+                                            </ul>
+                                        </div>
+
+                                        <!--Search By:-->
+                                        <div class="col-md-4">
+                                            <button class="btn btn-warning btn-sm btn-block dropdown-toggle addSearchForBy" type="button" data-toggle="dropdown">Search By: {{vm.contributionQuery.searchBy}}<span class="caret"></span></button>
+                                            <ul class="dropdown-menu">
+                                                <li><a href="#" ng-click="vm.setSearchParams(1, 'Any')">Any</a></li>
+                                                <li><hr /></li>
+                                                <li><a href="#" ng-click="vm.setSearchParams(1, 'Title')">Title</a></li>
+                                                <li><a href="#" ng-click="vm.setSearchParams(1, 'Person')">Person</a></li>
+                                                <li><a href="#" ng-click="vm.setSearchParams(1, 'Genre')">Genre</a></li>
+                                            </ul>
+                                        </div>
+                                    </div>
+
+                                    <div id="addSearchBarButton" class="row">
+                                        <!--Search Bar:-->
+                                        <div class="col-md-6">
+                                            <input class="form-control" type="text" size="60" placeholder="Search the database" ng-model="vm.contributionQuery.query" />
+                                        </div>
+
+                                        <!--Search Button:-->
+                                        <div class="col-md-3">
+                                            <input id="contributionSearchButton" class="btn btn-primary" type="button" value="Search" ng-click="vm.searchContribution()" />
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div ng-show="vm.searchContributions">
+                                    <!--Contribution Search Results Table:-->
+                                    <div ng-show="vm.showMResults" class="mini-results">
+                                        <table class="table">
+                                            <thead>
+                                                <tr>
+                                                    <th>Title</th>
+                                                    <th>Type</th>
+                                                    <th>Genre</th>
+                                                    <th></th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr ng-repeat="media in vm.mResults">
+                                                    <td ng-show="!media.added"><a href="entry/{{media.id}}">{{media.title}}</a></td>
+                                                    <td ng-show="!media.added">{{media.type}}</td>
+                                                    <td ng-show="!media.added">{{media.genre}}</td>
+                                                    <td ng-show="!media.added"><input type="button" class="btn btn-primary" value="Add" ng-click="vm.addContribution($index)" /></td>
+
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+
+                                    <!--Current Contributions:-->
+                                    <div class="mini-results">
+                                        <h3>Contributions:</h3>
+                                        <table id="editModalCList" class="table">
+                                            <thead>
+                                                <tr>
+                                                    <th>#</th>
+                                                    <th>Title</th>
+                                                    <th>Type</th>
+                                                    <th></th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr ng-repeat="contribution in vm.contributor.contributions">
+                                                    <td>{{$index + 1}}</td>
+                                                    <td class="col-md-4">{{contribution.title}}</td>
+                                                    <td>{{contribution.type}}</td>
+                                                    <td><input type="button" class="btn btn-danger btn-sm" value="Remove" ng-click="vm.removeContribution($index)" /></td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                                
+                                <p ng-show="vm.contributorValidationError == true" class="error">Fields marked with " * " are required.</p>
+                            </div>
+                        </div>
+
+                        <div class="form-control; row">
+                            <div class="col-md-4"></div>
+                            <div class="col-md-8">
+                                <input type="button" class="btn btn-sm btn-success dbContributorButton addDbMarginTop" value="Submit Contributor" ng-click="vm.submitContributor()" />
+                                <input type="button" class="btn btn-sm btn-warning addDbMarginTop" ng-click="vm.addAnotherContributor()" value="Add Another" />
+                                <input type="button" class="btn btn-sm btn-danger addDbMarginTop" ng-click="vm.cancelContributor()" value="Cancel" />
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <!--if (series)-->
+                <div ng-show="vm.selectedType == 'series'">
+
+                </div>
+                <!--if (game)-->
+                <div ng-show="vm.selectedType == 'game'">
+
+                </div>
+                <!--if (book)-->
+                <div ng-show="vm.selectedType == 'book'">
+
+                </div>
+                <!--if (music)-->
+                <div ng-show="vm.selectedType == 'music'">
+
+                </div>
+                <!--if (art)-->
+                <div ng-show="vm.selectedType == 'art'">
+
+                </div>
+
+                <input ng-show="addForm.$invalid" class="btn btn-danger" type="button" value="Submit" ng-click="vm.showValidationErrors()" />
+                <input ng-show="addForm.$valid" class="btn btn-primary" type="submit" value="Submit" ng-click="vm.createMedia()" />
+
+            </div>
+        </div>
+    </form>
+</div>

@@ -238,15 +238,16 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201602250908421_init.cs" />
-    <Compile Include="Migrations\201602250908421_init.Designer.cs">
-      <DependentUpon>201602250908421_init.cs</DependentUpon>
+    <Compile Include="Migrations\201604080035462_init.cs" />
+    <Compile Include="Migrations\201604080035462_init.Designer.cs">
+      <DependentUpon>201604080035462_init.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountBindingModels.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\ChangeListVm.cs" />
     <Compile Include="Models\ContributorVm.cs" />
+    <Compile Include="Models\GenericVm.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\Game.cs" />
     <Compile Include="Models\Media.cs" />
@@ -254,6 +255,7 @@
     <Compile Include="Models\Movie.cs" />
     <Compile Include="Models\Collection.cs" />
     <Compile Include="Models\Comment.cs" />
+    <Compile Include="Models\ReviewVm.cs" />
     <Compile Include="Models\StatusVm.cs" />
     <Compile Include="Models\Studio.cs" />
     <Compile Include="Models\Publisher.cs" />
@@ -277,6 +279,7 @@
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="GitIgnore\.gitignore" />
     <Content Include="Global.asax" />
+    <Content Include="master.js" />
     <Content Include="ngApp\Style.css" />
     <Content Include="ngApp\views\about.html" />
     <Content Include="ngApp\views\addSuccess.html" />
@@ -284,6 +287,7 @@
     <Content Include="ngApp\views\art.html" />
     <Content Include="ngApp\views\books.html" />
     <Content Include="ngApp\views\confirmEmail.html" />
+    <Content Include="ngApp\views\contributor.html" />
     <Content Include="ngApp\views\databaseList.html" />
     <Content Include="ngApp\views\entry.html" />
     <Content Include="ngApp\views\externalLogin.html" />
@@ -292,15 +296,21 @@
     <Content Include="ngApp\views\home.html" />
     <Content Include="ngApp\views\login.html" />
     <Content Include="ngApp\views\masterlistEditModal.html" />
+    <Content Include="ngApp\views\Modals\contributorEditModal.html" />
     <Content Include="ngApp\views\Modals\dbEditModal.html" />
     <Content Include="ngApp\views\Modals\loginModal.html" />
+    <Content Include="ngApp\views\Modals\searchModal.html" />
     <Content Include="ngApp\views\movies.html" />
     <Content Include="ngApp\views\music.html" />
     <Content Include="ngApp\views\myList.html" />
     <Content Include="ngApp\views\notFound.html" />
+    <Content Include="ngApp\views\profile.html" />
     <Content Include="ngApp\views\register.html" />
+    <Content Include="ngApp\views\registerSuccess.html" />
+    <Content Include="ngApp\views\Review.html" />
     <Content Include="ngApp\views\Search.html" />
     <Content Include="ngApp\views\series.html" />
+    <Content Include="ngApp\views\tour.html" />
     <Content Include="Scripts\angular-mocks.js" />
     <Content Include="Scripts\angular-resource.js" />
     <Content Include="Scripts\angular-resource.min.js" />
@@ -337,6 +347,9 @@
     <Content Include="Scripts\angular-route.min.js.map" />
     <Content Include="Scripts\angular-resource.min.js.map" />
     <Content Include="GitIgnore\Secret.config" />
+    <None Include="_references.js" />
+    <Content Include="master.js.map" />
+    <None Include="Properties\PublishProfiles\umd.pubxml" />
     <None Include="Scripts\jquery-2.1.4.intellisense.js" />
     <Content Include="Scripts\jquery-2.1.4.js" />
     <Content Include="Scripts\jquery-2.1.4.min.js" />
@@ -364,6 +377,7 @@
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
+    <Content Include="_references.js.map" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -383,6 +397,8 @@
     <TypeScriptCompile Include="ngApp\controllers\AddToDbController.ts" />
     <TypeScriptCompile Include="ngApp\controllers\artController.ts" />
     <TypeScriptCompile Include="ngApp\controllers\booksController.ts" />
+    <TypeScriptCompile Include="ngApp\controllers\contributorController.ts" />
+    <TypeScriptCompile Include="ngApp\controllers\contributorEditController.ts" />
     <TypeScriptCompile Include="ngApp\controllers\controllers.ts" />
     <TypeScriptCompile Include="ngApp\controllers\dbListController.ts" />
     <TypeScriptCompile Include="ngApp\controllers\entryController.ts" />
@@ -392,7 +408,11 @@
     <TypeScriptCompile Include="ngApp\controllers\moviesController.ts" />
     <TypeScriptCompile Include="ngApp\controllers\musicController.ts" />
     <TypeScriptCompile Include="ngApp\controllers\NavController.ts" />
+    <TypeScriptCompile Include="ngApp\controllers\profileController.ts" />
+    <TypeScriptCompile Include="ngApp\controllers\regSuccessController.ts" />
+    <TypeScriptCompile Include="ngApp\controllers\ReviewController.ts" />
     <TypeScriptCompile Include="ngApp\controllers\SearchController.ts" />
+    <TypeScriptCompile Include="ngApp\controllers\searchModalController.ts" />
     <TypeScriptCompile Include="ngApp\controllers\seriesController.ts" />
     <TypeScriptCompile Include="ngApp\services\accountService.ts" />
     <TypeScriptCompile Include="ngApp\services\MediaService.ts" />
@@ -412,8 +432,8 @@
     <Service Include="{4A0DDDB5-7A95-4FBF-97CC-616D07737A77}" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201602250908421_init.resx">
-      <DependentUpon>201602250908421_init.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201604080035462_init.resx">
+      <DependentUpon>201604080035462_init.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

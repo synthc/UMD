@@ -1,0 +1,20 @@
+﻿<h1>Manage Database Entries</h1>
+
+<h3>This page is currently in development.</h3>
+
+<a href="/addtodb">Create a new entry</a>
+<br />
+<br />
+
+<ul>
+    <li ng-repeat="media in vm.medias">
+        <div ng-show="media.isActive">
+            <a href="/entry/{{media.id}}">{{media.title}}</a>
+            <button ng-click="vm.openEditModal(media.id)" class="btn btn-primary">Edit</button>
+        </div>
+        <div ng-show="!media.isActive">
+            [Deleted Item: {{media.title}}]
+            <button ng-click="vm.openEditModal(media.id)" class="btn btn-primary">Restore</button>
+        </div>
+    </li>
+</ul>

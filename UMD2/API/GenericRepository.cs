@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Data.Entity;
 using System.Data.Entity.Validation;
 using System.Linq;
 using System.Linq.Expressions;
@@ -13,6 +14,18 @@ namespace Generic_Repositories.Repositories
     {
 
         private ApplicationDbContext _dataContext = new ApplicationDbContext();
+
+        //Set a list of objects as detached:
+        //public List<Object> DetachList(List<Object> list)
+        //{
+        //    foreach(Object obj in list){
+        //        _dataContext.Entry(obj).State = EntityState.Detached;
+        //    }
+
+        //    return list;
+        //}
+
+
 
         /// <summary>
         /// Generic query method
@@ -69,13 +82,26 @@ namespace Generic_Repositories.Repositories
             {
                 _dataContext.SaveChanges();
             }
-            catch (DbEntityValidationException dbVal)
+            catch (DbEntityValidationException e)
             {
-                var firstError = dbVal.EntityValidationErrors.First().ValidationErrors.First().ErrorMessage;
-                throw new ValidationException(firstError);
+                foreach (var eve in e.EntityValidationErrors)
+                {
+                    Console.WriteLine("Entity of type \"{0}\" in state \"{1}\" has the following validation errors:",
+                        eve.Entry.Entity.GetType().Name, eve.Entry.State);
+                    foreach (var ve in eve.ValidationErrors)
+                    {
+                        Console.WriteLine("- Property: \"{0}\", Error: \"{1}\"",
+                            ve.PropertyName, ve.ErrorMessage);
+                    }
+                }
+                throw;
             }
+            //catch (DbEntityValidationException dbVal)
+            //{
+            //    var firstError = dbVal.EntityValidationErrors.First().ValidationErrors.First().ErrorMessage;
+            //    throw new ValidationException(firstError);
+            //}
         }
-
 
         /// <summary>
         /// Execute stored procedures and dynamic sql

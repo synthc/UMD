@@ -14,14 +14,15 @@ namespace UMD2.Models
         public int Id { get; set; }
         public string Type { get; set; }
         public bool IsActive { get; set; }
+        public int Flags { get; set; } //Augmented when a user flags a media for deletion
         public bool IsPublic { get; set; }
         public List<UserMedia> UserMedias { get; set; }
-        public List<ApplicationUser> InListOf { get; set; } //unused (may be useful to define many-to-many relationship)
+        public List<ApplicationUser> InListOf { get; set; } //unused
         public DateTime DbDateAdded { get; set; }
         public string Title { get; set; }
         public DateTime ReleaseDate { get; set; }
         public string Description { get; set; }
-        public string ContentRating { get; set; } //e.g. PG-13
+        public string ContentRating { get; set; }
         public List<Contributor> Contributors { get; set; }
         public List<Collection> Collections { get; set; }
         public string CountryOfOrigin { get; set; }
@@ -30,11 +31,5 @@ namespace UMD2.Models
         public float AverageRating { get; set; }
         public int RatingCount { get; set; }
         public List<Review> Reviews { get; set; }
-        //public DateTime UserDateAdded { get; set; }
-        //public string Status { get; set; }
-        //public int Rating { get; set; }
-        //public List<string> Tags { get; set; }
-        //public int ReValue { get; set; }
-        //public int ReCount { get; set; }
     }
 }

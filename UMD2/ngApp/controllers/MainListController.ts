@@ -24,15 +24,14 @@
                     while (!quit && i < this.masterList[j].userMedias.length) {
                         if (this.masterList[j].userMedias[i].ownerId == this.user.id) {
                             this.masterList[j].rating = this.masterList[j].userMedias[i].rating;
-                            //let defaultDate = new Date(1800, 1, 1);
                             let startDate = new Date(this.masterList[j].userMedias[i].startDate);
-                            if (startDate.getFullYear() != 1800){
+                            if (startDate.getFullYear() != 1800){ //<--TODO
                                 this.masterList[j].startDateYear = startDate.getFullYear();
                                 this.masterList[j].startDateMonth = startDate.getMonth() + 1;
                                 this.masterList[j].startDateDay = startDate.getDate();
                             }
                             let endDate = new Date(this.masterList[j].userMedias[i].endDate);
-                            if (endDate.getFullYear() != 1800) {
+                            if (endDate.getFullYear() != 1800) { //<--TODO
                                 this.masterList[j].endDateYear = endDate.getFullYear();
                                 this.masterList[j].endDateMonth = endDate.getMonth() + 1;
                                 this.masterList[j].endDateDay = endDate.getDate();

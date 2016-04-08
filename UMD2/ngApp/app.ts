@@ -17,6 +17,64 @@
                 controller: MyApp.Controllers.SearchController,
                 controllerAs: 'vm'
             })
+            .when('/profile/:id', {
+                templateUrl: '/ngApp/views/profile.html',
+                controller: MyApp.Controllers.ProfileController,
+                controllerAs: 'vm'
+            })
+            .when('/contributor/:id', {
+                templateUrl: '/ngApp/views/contributor.html',
+                controller: MyApp.Controllers.ContributorController,
+                controllerAs: 'vm'
+            })
+            .when('/mylist', {
+                templateUrl: '/ngApp/views/myList.html',
+                controller: MyApp.Controllers.MainListController,
+                controllerAs: 'vm'
+            })
+            .when('/addtodb', {
+                templateUrl: '/ngApp/views/addToDatabase.html',
+                controller: MyApp.Controllers.AddToDbController,
+                controllerAs: 'vm'
+            })
+            .when('/review/:id', {
+                templateUrl: '/ngApp/views/review.html',
+                controller: MyApp.Controllers.ReviewController,
+                controllerAs: 'vm'
+            })
+            .when('/addsuccess', {
+                templateUrl: 'ngApp/views/addSuccess.html',
+                controller: MyApp.Controllers.AddSuccessController,
+                controllerAs: 'vm'
+            })
+            .when('/login', {
+                templateUrl: '/ngApp/views/login.html',
+                controller: MyApp.Controllers.LoginController,
+                controllerAs: 'controller'
+            })
+            .when('/register', {
+                templateUrl: '/ngApp/views/register.html',
+                controller: MyApp.Controllers.RegisterController,
+                controllerAs: 'controller'
+            })
+            .when('/registersuccess', {
+                templateUrl: '/ngApp/views/registerSuccess.html',
+                controller: MyApp.Controllers.regSuccessController,
+                controllerAs: 'vm'
+            })
+            .when('/about', {
+                templateUrl: '/ngApp/views/about.html',
+                controller: MyApp.Controllers.AboutController,
+                controllerAs: 'vm'
+            })
+            .when('/tour', {
+                templateUrl: '/ngApp/views/tour.html',
+            })
+            .when('/debug/dblist', {
+                templateUrl: '/ngApp/views/databaseList.html',
+                controller: MyApp.Controllers.DbListController,
+                controllerAs: 'vm'
+            })
             .when('/movies', {
                 templateUrl: '/ngApp/views/movies.html',
                 controller: MyApp.Controllers.MoviesController,
@@ -47,46 +105,6 @@
                 controller: MyApp.Controllers.ArtController,
                 controllerAs: 'vm'
             })
-            .when('/mylist', {
-                templateUrl: '/ngApp/views/myList.html',
-                controller: MyApp.Controllers.MainListController,
-                controllerAs: 'vm'
-            })
-            .when('/addtodb', {
-                templateUrl: '/ngApp/views/addToDatabase.html',
-                controller: MyApp.Controllers.AddToDbController,
-                controllerAs: 'vm'
-            })
-            //.when('/edit/:id', {
-            //    templateUrl: 'ngApp/views/Modals/dbEditModal.html',
-            //    controller: MyApp.Controllers.DbEditController,
-            //    controllerAs: 'vm'
-            //})
-            .when('/addsuccess', {
-                templateUrl: 'ngApp/views/addSuccess.html',
-                controller: MyApp.Controllers.AddSuccessController,
-                controllerAs: 'vm'
-            })
-            .when('/debug/dblist', {
-                templateUrl: '/ngApp/views/databaseList.html',
-                controller: MyApp.Controllers.DbListController,
-                controllerAs: 'vm'
-            })
-            .when('/about', {
-                templateUrl: '/ngApp/views/about.html',
-                controller: MyApp.Controllers.AboutController,
-                controllerAs: 'vm'
-            })
-            .when('/login', {
-                templateUrl: '/ngApp/views/login.html',
-                controller: MyApp.Controllers.LoginController,
-                controllerAs: 'controller'
-            })
-            .when('/register', {
-                templateUrl: '/ngApp/views/register.html',
-                controller: MyApp.Controllers.RegisterController,
-                controllerAs: 'controller'
-            })
             .when('/externalLogin', {
                 templateUrl: '/ngApp/views/externalLogin.html',
                 controller: MyApp.Controllers.ExternalLoginController,
@@ -103,7 +121,7 @@
                 controllerAs: 'controller'
             })
             .otherwise({
-                redirectTo: '/ngApp/views/notFound.html'
+                templateUrl: '/ngApp/views/notFound.html'
             });
 
         $locationProvider.html5Mode(true);

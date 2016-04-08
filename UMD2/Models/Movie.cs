@@ -16,6 +16,5 @@ namespace UMD2.Models
         public int Duration { get; set; }
         public bool IsAnimation { get; set; }
         public string Language { get; set; }
-        //public int Watchtime { get; set; }
     }
 }

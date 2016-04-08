@@ -1,0 +1,10 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<parameters>
+  <parameter name="IIS Web Application Name" description="" value="umd" tags="IisApp">
+    <parameterEntry kind="ProviderPath" scope="IisApp" match="^C:\\Users\\synthc\\Documents\\Visual\ Studio\ 2015\\Projects\\UMD2\\UMD2\\obj\\Release\\Package\\PackageTmp$" />
+    <parameterEntry kind="ProviderPath" scope="setAcl" match="^C:\\Users\\synthc\\Documents\\Visual\ Studio\ 2015\\Projects\\UMD2\\UMD2\\obj\\Release\\Package\\PackageTmp$" />
+  </parameter>
+  <parameter name="DefaultConnection-Web.config Connection String" description="" value="Data Source=tcp:umd-server.database.windows.net,1433;Initial Catalog=umd_db;User Id=synthc@umd-server;Password=Dr3@amcollector" tags="">
+    <parameterEntry kind="XmlFile" scope="C:\\Users\\synthc\\Documents\\Visual\ Studio\ 2015\\Projects\\UMD2\\UMD2\\obj\\Release\\Package\\PackageTmp\\Web\.config$" match="/configuration/connectionStrings/add[@name='DefaultConnection']/@connectionString" />
+  </parameter>
+</parameters>

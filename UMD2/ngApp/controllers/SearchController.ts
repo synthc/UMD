@@ -8,6 +8,7 @@
         //public hasInList = false;
         //public showListLink;
 
+        //search results are gotten directly from the media service
         constructor(private MediaService: MyApp.Services.MediaService, private accountService: MyApp.Services.AccountService) {
             this.setUserInfo();
             //this.changeListVm = {};

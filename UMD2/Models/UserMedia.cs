@@ -11,6 +11,8 @@ namespace UMD2.Models
         public string OwnerId { get; set; }
         public int MediaId { get; set; }
         public int Rating { get; set; }
+        public Review Review { get; set; }
+        public List<Comment> Comments { get; set; }
         public string Status { get; set; }
         public int WatchTime { get; set; }
         public DateTime AddedToList { get; set; }
